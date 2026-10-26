@@ -12,8 +12,9 @@ with a `CHANGELOG.md` section.
 ## A skill
 
 Add `skills/<name>/SKILL.md` with `name` equal to the directory and a `description`. Every framework reads the same
-file; no generation is involved. Scripts a skill runs go in its own `scripts/` directory and use Node (the runtime every
-consumer has).
+file; no generation is involved. A skill names the MCP tools it calls; scripts that are the skill's alone go in its
+`scripts/` directory, use Node (the runtime every consumer has), and import nothing outside the skill, because a skill
+is distributed on its own.
 
 ## A subagent
 
@@ -25,15 +26,17 @@ framework-only agent is a complete native file under the framework's `agents/` d
 
 ## An MCP server
 
-Declare it in `mcp.json` in the Agent Plugins format (`type: stdio` with a single-token `command`, or `streamable-http`
-with a `url`). `${PLUGIN_ROOT}` in `args`, `env`, or `cwd` becomes each framework's variable. The generator writes
-`.mcp.json` and `mcp_config.json`; Codex reads `mcp.json` itself; the Pi extension registers the server.
+Implement it under `mcp/<server>/` as zero-dependency Node and declare it in `mcp.json` in the Agent Plugins format
+(`type: stdio` with a single-token `command`, or `streamable-http` with a `url`). The server is the only implementation
+of its capability; skills and hooks call its tools instead of sharing its code. `${PLUGIN_ROOT}` in `args`, `env`, or
+`cwd` becomes each framework's variable. The generator writes `.mcp.json` and `mcp_config.json`; Codex reads `mcp.json`
+itself; the Pi extension registers the server.
 
 ## A hook
 
 Hooks are written once per framework under `integrations/<framework>/hooks/hooks.json` with their scripts beside them;
-nothing is translated between frameworks. The generator validates each file's shape and copies Antigravity's to the root
-`hooks.json`.
+nothing is translated between frameworks, and a hook script imports nothing outside its directory. The generator
+validates each file's shape and copies Antigravity's to the root `hooks.json`.
 
 ## A rule or a command
 

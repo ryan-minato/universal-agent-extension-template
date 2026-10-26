@@ -1,9 +1,8 @@
 ---
-description: Scan the workspace for TODO/FIXME markers and list the unowned ones
-argument-hint: "[directory] [--json]"
-allowed-tools: Bash(node:*)
+description: List the unowned TODO/FIXME markers of the workspace through the todo-tracker MCP tool
+argument-hint: "[directory]"
 ---
 
-Run `node ${CLAUDE_PLUGIN_ROOT}/skills/todo-scan/scripts/scan.mjs ${ARGUMENTS:-.} --unowned-only` and report the first
-line verbatim, then the entries. If the user wants the markers resolved rather than listed, continue with the
-`todo-triage` skill.
+Call the `todo-tracker` MCP tool `list_todos` with `unownedOnly: true` and, if `$ARGUMENTS` names a directory, `root`
+set to it. Report the first line of the result verbatim, then the entries. If the user wants the markers resolved rather
+than listed, continue with the `todo-triage` skill.

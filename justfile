@@ -16,7 +16,7 @@ check: lint scripts-check test generate-check validate spec-check harness-check 
 lint:
     deno fmt --check
     deno lint
-    git ls-files -z 'lib/*.mjs' 'skills/*/scripts/*.mjs' 'integrations/*/hooks/scripts/*.mjs' 'integrations/*/scripts/*.mjs' | xargs -0 -n1 node --check
+    git ls-files -z 'mcp/*/*.mjs' 'skills/*/scripts/*.mjs' 'integrations/*/hooks/scripts/*.mjs' 'integrations/*/scripts/*.mjs' | xargs -0 -n1 node --check
 
 # Type-check the Deno scripts and tests
 scripts-check:
@@ -63,9 +63,9 @@ docs-check:
 docs-serve:
     zensical serve
 
-# Scan this repository for TODO/FIXME markers with the plugin's own scanner (the demo)
+# Scan this repository for TODO/FIXME markers with the plugin's MCP server in its terminal mode (the demo)
 todo-scan *args:
-    node lib/todo-scan.mjs . --exclude .claude --exclude .agents "$@"
+    node mcp/todo-tracker/server.mjs --scan . --exclude .claude --exclude .agents "$@"
 
 # Print how the repository's labels differ from .github/labels.yml; --apply writes it (--keep-undeclared, --delete-used <name>)
 labels *args:

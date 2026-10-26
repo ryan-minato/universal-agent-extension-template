@@ -38,17 +38,22 @@ by one line per marker as `<file>:<line>  <KIND>(<owner or unowned>[ #issue])
 <text>`; `--unowned-only` keeps only
 unowned markers and `--json` returns the summary and entries as JSON.
 
-#### Scenario: The sample fixture
+#### Scenario: The sample fixture at a terminal
 
-- **WHEN** `node lib/todo-scan.mjs tests/fixtures/sample --unowned-only` runs
+- **WHEN** `node mcp/todo-tracker/server.mjs --scan tests/fixtures/sample --unowned-only` runs
 - **THEN** the first line is `4 marker(s): 3 TODO, 1 FIXME; 2 unowned, 1 linked to an issue.` and two entry lines follow
 
-### Requirement: Skill entry point
+### Requirement: The skill calls the tool
 
-The `todo-scan` skill SHALL run the scan through `skills/todo-scan/scripts/scan.mjs` with the same arguments and report
-the verdict line verbatim.
+The `todo-scan` skill SHALL obtain the scan by calling the MCP tool `list_todos` and SHALL ship no scanner of its own;
+when the tool is unavailable it reports that and stops.
 
 #### Scenario: A framework invokes the skill
 
 - **WHEN** the skill is invoked in any first-class framework or Pi with a directory holding an unowned marker
-- **THEN** the agent's answer starts with the verdict line and lists the unowned marker
+- **THEN** the agent calls `list_todos` with `unownedOnly` and its answer starts with the verdict line
+
+#### Scenario: The tool is missing
+
+- **WHEN** the session has no `todo-tracker` MCP tools
+- **THEN** the skill says the server is not registered and does not fall back to a shell search

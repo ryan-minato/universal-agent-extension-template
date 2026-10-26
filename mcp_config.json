@@ -3,7 +3,7 @@
     "todo-tracker": {
       "command": "node",
       "args": [
-        "${extensionPath}/lib/mcp-server.mjs"
+        "${extensionPath}/mcp/todo-tracker/server.mjs"
       ]
     }
   }

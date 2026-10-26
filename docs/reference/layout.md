@@ -4,8 +4,8 @@
 plugin.json                 Agent Plugins 1.0 manifest: name, version, description, author, license, keywords;
                             extensions["com.openai"] carries the Codex hooks path
 mcp.json                    MCP servers in the Agent Plugins format (type, command, args, ${PLUGIN_ROOT})
-lib/                        Plugin runtime shared by every framework: scanner, MCP server, hook helper (Node ESM)
-skills/<name>/SKILL.md      Agent Skills, read by every framework as they are
+mcp/<server>/               The MCP servers: the one implementation of each capability, exposed as tools (Node ESM)
+skills/<name>/SKILL.md      Agent Skills, read by every framework as they are; a skill's own scripts live in its scripts/
 agents/<name>.md            Shared subagents: name, description, body only
 integrations/
   codex/                    overrides.yaml, agents/*.override.yaml, hooks/, scripts/install-agents.mjs

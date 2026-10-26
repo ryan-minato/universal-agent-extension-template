@@ -40,7 +40,7 @@ repeats each in a label's hover text (Synchronization).
 
 | Label                | Covers                                                                                                                       |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `area:core`          | `plugin.json`, `mcp.json`, `lib/`, `skills/`, `agents/`, `integrations/README.md`, `openspec/specs/`                         |
+| `area:core`          | `plugin.json`, `mcp.json`, `mcp/`, `skills/`, `agents/`, `integrations/README.md`, `openspec/specs/`                         |
 | `area:codex`         | `integrations/codex/`, `.codex-plugin/`, `.codex/`                                                                           |
 | `area:claude-code`   | `integrations/claude-code/`, `.claude-plugin/`, `.mcp.json`                                                                  |
 | `area:antigravity`   | `integrations/antigravity/`, `.antigravity-plugin/`, `rules/`, `hooks.json`, `mcp_config.json`                               |

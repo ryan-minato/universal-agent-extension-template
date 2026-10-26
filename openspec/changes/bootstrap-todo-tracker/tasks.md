@@ -5,7 +5,8 @@ conversation on 2026-10-26.
 
 ## 1. Runtime and sources
 
-- [x] 1.1 `lib/todo-scan.mjs`, `lib/mcp-server.mjs`, `lib/hook-todo-check.mjs` (zero-dependency Node ESM)
+- [x] 1.1 `mcp/todo-tracker/` (server with `list_todos` and `scan_file`, private scanner module), self-contained hook
+      scripts, the triage skill's edit script (zero-dependency Node ESM)
 - [x] 1.2 `plugin.json`, `mcp.json`, `skills/todo-scan/`, `skills/todo-triage/`, `agents/todo-triager.md`
 - [x] 1.3 `integrations/{codex,claude-code,antigravity,pi}/` with overrides, agent overrides, hooks, command, rule,
       extension, prompt, installer

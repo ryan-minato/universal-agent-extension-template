@@ -32,7 +32,7 @@ Skip any file step 3 will delete (for example the Pi patch or the Codex installe
 3. `scripts/lib/constants.ts`: `REPO`.
 4. The marker string `generated-by: todo-tracker` in `scripts/generate/lib/agents.ts` and
    `integrations/codex/scripts/install-agents.mjs` (both must agree; the installer refuses files without it).
-5. `lib/mcp-server.mjs`: `SERVER_INFO`; `mcp.json`: the server key.
+5. `mcp/todo-tracker/server.mjs`: `SERVER_INFO`; `mcp.json`: the server key; the directory name under `mcp/`.
 6. `zensical.toml`: `site_name`, `site_url`, `repo_url`.
 7. `.github/CODEOWNERS`, `.github/ISSUE_TEMPLATE/config.yml`, `SECURITY.md`, `SUPPORT.md`: the owner and the repository
    URL.
@@ -50,9 +50,9 @@ hit explained in the PR.
 - A component: delete its source (a skill directory, `agents/<name>.md` with its overrides, `mcp.json`, a hooks
   directory, a rule, a command) and the capability spec under `openspec/specs/` that described it. The generator and
   validator tolerate an absent `mcp.json`, an empty `agents/`, and absent hooks, commands, or rules.
-- The sample runtime: `lib/todo-scan.mjs`, `lib/mcp-server.mjs`, `lib/hook-todo-check.mjs`, `skills/todo-scan/`,
-  `skills/todo-triage/`, `agents/todo-triager.md`, the hook scripts, the Antigravity rule, the Claude command, the Pi
-  extension and prompt, and `tests/unit/` tests that import them, plus `tests/fixtures/sample/`.
+- The sample runtime: `mcp/todo-tracker/`, `skills/todo-scan/`, `skills/todo-triage/` (with its `scripts/`),
+  `agents/todo-triager.md`, the hook scripts, the Antigravity rule, the Claude command, the Pi extension and prompt, and
+  the `tests/unit/` tests that import them, plus `tests/fixtures/sample/`.
 
 Check: `just generate && just check` is green after every deletion, and `git status` shows no generated file left behind
 for a removed framework.

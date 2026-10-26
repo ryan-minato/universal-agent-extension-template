@@ -279,7 +279,7 @@ export function areaOf(path: string): Area | "none" | undefined {
     ) return "antigravity";
     if (under(path, "integrations/pi/") || path === "package.json") return "pi";
     if (
-        under(path, "lib/", "skills/", "agents/", SPECS) ||
+        under(path, "mcp/", "skills/", "agents/", SPECS) ||
         ["plugin.json", "mcp.json", "integrations/README.md"].includes(path)
     ) return "core";
     if (

@@ -1,6 +1,13 @@
 import { assertEquals, assertThrows } from "jsr:@std/assert@1.0.13";
 import { dirname, fromFileUrl, join } from "jsr:@std/path@1.1.6";
-import { formatReport, parseArgs, parseLine, scanDirectory, scanText, summarize } from "../../lib/todo-scan.mjs";
+import {
+    formatReport,
+    parseArgs,
+    parseLine,
+    scanDirectory,
+    scanText,
+    summarize,
+} from "../../mcp/todo-tracker/scan.mjs";
 
 const SAMPLE = join(dirname(fromFileUrl(import.meta.url)), "..", "fixtures", "sample");
 

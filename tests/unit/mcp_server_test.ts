@@ -1,5 +1,5 @@
 import { assertEquals } from "jsr:@std/assert@1.0.13";
-import { handleMessage, PROTOCOL_VERSION, TOOLS } from "../../lib/mcp-server.mjs";
+import { handleMessage, PROTOCOL_VERSION, TOOLS } from "../../mcp/todo-tracker/server.mjs";
 
 // The server is plain JavaScript; the tests read its JSON-RPC answers as untyped objects.
 // deno-lint-ignore no-explicit-any
@@ -46,4 +46,32 @@ Deno.test("a scan failure is reported as a tool error, not a protocol error", ()
     };
     const answer = call({ jsonrpc: "2.0", id: 6, method: "tools/call", params: { name: "list_todos" } }, failing);
     assertEquals(answer.result.isError, true);
+});
+
+Deno.test("scan_file scans one file through the injected reader and reports a missing one as a tool error", () => {
+    const reading = {
+        ...deps,
+        read: (path: string) => (path === "ok.js" ? "// TODO: x\n" : (() => {
+            throw new Error("ENOENT");
+        })()),
+    };
+    const ok = call({
+        jsonrpc: "2.0",
+        id: 7,
+        method: "tools/call",
+        params: { name: "scan_file", arguments: { path: "ok.js" } },
+    }, reading);
+    assertEquals(ok.result.structuredContent.entries.length, 1);
+    const missing = call({
+        jsonrpc: "2.0",
+        id: 8,
+        method: "tools/call",
+        params: { name: "scan_file", arguments: { path: "no.js" } },
+    }, reading);
+    assertEquals(missing.result.isError, true);
+    assertEquals(
+        call({ jsonrpc: "2.0", id: 9, method: "tools/call", params: { name: "scan_file", arguments: {} } }, reading)
+            .result.isError,
+        true,
+    );
 });

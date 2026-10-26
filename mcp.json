@@ -4,7 +4,7 @@
     "todo-tracker": {
       "type": "stdio",
       "command": "node",
-      "args": ["${PLUGIN_ROOT}/lib/mcp-server.mjs"]
+      "args": ["${PLUGIN_ROOT}/mcp/todo-tracker/server.mjs"]
     }
   }
 }

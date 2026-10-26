@@ -16,13 +16,13 @@ agy plugin install https://github.com/ryan-minato/universal-agent-extension-temp
 
 ## What you get
 
-| Component                         | After install                                                                                           |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Skills `todo-scan`, `todo-triage` | `/todo-tracker:todo-scan`, `/todo-tracker:todo-triage`                                                  |
-| Rule `todo-style`                 | Applied when a matching source file is in context (`trigger: glob`)                                     |
-| Subagent `todo-triager`           | Loaded from `agents/` with the shared front matter only; its tool list is the framework default         |
-| MCP tool `list_todos`             | From `mcp_config.json`; the command path uses `${extensionPath}`                                        |
-| PostToolUse hook                  | Writes the reminder to the hook log; Antigravity's PostToolUse cannot inject text into the conversation |
+| Component                           | After install                                                                                           |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Skills `todo-scan`, `todo-triage`   | `/todo-tracker:todo-scan`, `/todo-tracker:todo-triage`                                                  |
+| Rule `todo-style`                   | Applied when a matching source file is in context (`trigger: glob`)                                     |
+| Subagent `todo-triager`             | Loaded from `agents/` with the shared front matter only; its tool list is the framework default         |
+| MCP tools `list_todos`, `scan_file` | From `mcp_config.json`; the command path uses `${extensionPath}`                                        |
+| PostToolUse hook                    | Writes the reminder to the hook log; Antigravity's PostToolUse cannot inject text into the conversation |
 
 ## Known limits
 

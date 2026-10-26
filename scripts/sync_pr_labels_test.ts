@@ -641,7 +641,7 @@ Deno.test("areaOf follows the table: first match wins", () => {
         "package.json": "pi",
         "plugin.json": "core",
         "mcp.json": "core",
-        "lib/todo-scan.mjs": "core",
+        "mcp/todo-tracker/server.mjs": "core",
         "skills/todo-scan/SKILL.md": "core",
         "agents/todo-triager.md": "core",
         "integrations/README.md": "core",

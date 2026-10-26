@@ -10,8 +10,9 @@ plugin's behavior contracts.
 Management code (everything under `scripts/`, `tests/`, the workflows, the justfile, the project skills' scripts) is
 Deno TypeScript, readable first, never shipped with the plugin, and never bound to a skill's runtime script. It checks
 interfaces where data enters and fails with a message naming the file to fix; it adds no fallback that hides an
-unexpected failure. Runtime code (`lib/`, the skill and hook scripts, the Pi extension) is zero-dependency Node ESM
-because that is what every consumer has; it ships with the plugin, so it carries no development tooling.
+unexpected failure. Runtime code (the MCP servers under `mcp/`, the skills' own scripts, the hook scripts, the Pi
+extension) is zero-dependency Node ESM because that is what every consumer has; it ships with the plugin, so it carries
+no development tooling.
 
 Deno entrypoints are executable scripts whose shebangs own their runtime permissions; recipes and workflows invoke them
 directly, and widening a script's capabilities means editing its shebang. Imports pin `jsr:` and `npm:` versions inline;

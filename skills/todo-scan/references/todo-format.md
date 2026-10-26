@@ -3,7 +3,7 @@
 Read when writing a marker, when a scan result looks wrong, or when changing the scanner.
 
 A marker is the word `TODO` or `FIXME`, an optional parenthesized owner and issue, a colon, and the text. The scanner
-(`lib/todo-scan.mjs`) recognizes exactly:
+inside the MCP server (`mcp/todo-tracker/scan.mjs`) recognizes exactly:
 
 ```text
 TODO(<owner>): <text>              owned
@@ -18,3 +18,8 @@ Default excluded directories: `.git`, `node_modules`, `site`, `dist`, `build`, `
 byte in the first 8 KB) and files over 1,000,000 bytes are skipped.
 
 Report line shape: `<file>:<line>  <KIND>(<owner or unowned>[ #issue]) <text>`.
+
+The MCP server exposes the scan as two tools: `list_todos` (a directory; `root`, `unownedOnly`, `limit`) and `scan_file`
+(one file; `path`). Both return the text report and a `structuredContent` with the summary and the entries. The
+post-edit hooks detect only the unowned form with a regex of their own and point at these tools; they are not a second
+scanner.

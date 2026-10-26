@@ -27,9 +27,10 @@ shape of the work.
 
 ## Replace the sample
 
-The sample's runtime (`lib/`, the skills, the agent, the hook scripts, the rule, the command, the Pi extension) and its
-tests are yours to delete. Add your first component where [Repository layout](../reference/layout.md) says it lives, run
-`just generate`, and extend the compatibility tests with the shape your component must have in each framework.
+The sample's runtime (`mcp/todo-tracker/`, the skills, the agent, the hook scripts, the rule, the command, the Pi
+extension) and its tests are yours to delete. Add your first component where [Repository layout](../reference/layout.md)
+says it lives, run `just generate`, and extend the compatibility tests with the shape your component must have in each
+framework.
 
 ## Reset the record
 

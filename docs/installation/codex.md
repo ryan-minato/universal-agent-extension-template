@@ -17,12 +17,12 @@ A local checkout works the same way with its path instead of the URL.
 
 ## What you get
 
-| Component                         | After install                                                                                                                             |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Skills `todo-scan`, `todo-triage` | Offered as `$todo-scan` and `$todo-triage`                                                                                                |
-| MCP tool `list_todos`             | Listed among the plugin's MCP tools (`mcp.json`, stdio, `node`)                                                                           |
-| PostToolUse hook                  | A `systemMessage` reminder after a file write that leaves unowned markers; plugin hooks run only for a trusted, manually installed plugin |
-| Subagent `todo-triager`           | **Not registered by the plugin.** Codex plugins cannot register agent roles. Install the generated role explicitly (next section).        |
+| Component                           | After install                                                                                                                             |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Skills `todo-scan`, `todo-triage`   | Offered as `$todo-scan` and `$todo-triage`                                                                                                |
+| MCP tools `list_todos`, `scan_file` | Listed among the plugin's MCP tools (`mcp.json`, stdio, `node`); the skills call them                                                     |
+| PostToolUse hook                    | A `systemMessage` reminder after a file write that leaves unowned markers; plugin hooks run only for a trusted, manually installed plugin |
+| Subagent `todo-triager`             | **Not registered by the plugin.** Codex plugins cannot register agent roles. Install the generated role explicitly (next section).        |
 
 ## Install the subagent
 

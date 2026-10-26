@@ -16,11 +16,11 @@ CLIs); installing the plugin into a framework needs none of that.
 ## 2. Try the runtime directly
 
 ```sh
-node lib/todo-scan.mjs tests/fixtures/sample
+node mcp/todo-tracker/server.mjs --scan tests/fixtures/sample
 ```
 
-prints the verdict line and four markers, two of them unowned. The same scan answers the MCP tool `list_todos` and the
-hooks.
+prints the verdict line and four markers, two of them unowned: the MCP server in its terminal mode, the same scan the
+`list_todos` tool returns.
 
 ## 3. Install into a framework
 
@@ -32,9 +32,10 @@ which steps are manual.
 
 In a session with the plugin loaded:
 
-1. Run the `todo-scan` skill (`/todo-tracker:todo-scan` in Claude Code and Antigravity, `$todo-scan` in Codex,
-   `/skill:todo-scan` in Pi) on a directory with a bare `TODO:` line.
-2. Ask the agent to call `list_todos` through MCP; the answer starts with the same verdict line.
+1. Ask the agent to call `list_todos` through MCP on a directory with a bare `TODO:` line; the answer starts with the
+   verdict line.
+2. Run the `todo-scan` skill (`/todo-tracker:todo-scan` in Claude Code and Antigravity, `$todo-scan` in Codex,
+   `/skill:todo-scan` in Pi): it calls the same tool and reports the verdict.
 3. Edit a file and add an unowned marker: the PostToolUse hook reminds the agent (Claude Code and Codex inject the
    reminder into the conversation; Antigravity writes it to the hook log).
 4. Ask for the `todo-triager` subagent to classify the markers; it reports buckets and next steps without editing

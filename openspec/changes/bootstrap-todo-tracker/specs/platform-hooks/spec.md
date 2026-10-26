@@ -7,8 +7,15 @@ its own hook implementation.
 
 ### Requirement: One implementation per framework
 
-Hooks SHALL be written under `integrations/<framework>/hooks/` in that framework's format and never translated; the
-generator validates each file's shape and copies only Antigravity's to the root.
+Hooks SHALL be written under `integrations/<framework>/hooks/` in that framework's format and never translated; each
+hook script is self-contained, importing nothing outside its directory, and its reminder points the agent at the MCP
+tools and the `todo-triage` skill rather than scanning further. The generator validates each file's shape and copies
+only Antigravity's to the root.
+
+#### Scenario: A hook script that reaches outside
+
+- **WHEN** a hook script imports a module from outside its directory
+- **THEN** `just validate` fails naming the script and the import
 
 #### Scenario: A Claude-style hooks file for Antigravity
 

@@ -14,14 +14,15 @@ Pi installs the repository as a package whose extension registers the scan as a 
 - **WHEN** `just test` runs
 - **THEN** each path or glob under `pi` resolves to at least one file
 
-### Requirement: Extension registrations
+### Requirement: Extension registers the server
 
-The extension SHALL register the tool `list_todos`, the command `/todos`, and the MCP server `todo-tracker`.
+The extension SHALL register the MCP server `todo-tracker` and nothing else; the `/todos` prompt template asks the model
+to call `list_todos`.
 
-#### Scenario: The command
+#### Scenario: The prompt
 
 - **WHEN** `/todos` runs in a Pi session with the package installed
-- **THEN** the unowned markers of the current directory are shown as a notification
+- **THEN** the model calls `list_todos` with `unownedOnly` and reports the verdict line
 
 ### Requirement: Compatibility tier
 

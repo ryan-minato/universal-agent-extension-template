@@ -11,9 +11,9 @@ approved the plan in conversation on 2026-10-26 before the label workflow existe
 
 ## What Changes
 
-- The sample plugin `todo-tracker`: a TODO/FIXME scanner shared by two skills, a subagent, an MCP server, and one
-  post-edit hook per first-class framework; an Antigravity rule, a Claude Code command, and a Pi extension with a prompt
-  template.
+- The sample plugin `todo-tracker`: an MCP server that owns the TODO/FIXME scan (`list_todos`, `scan_file`), two skills
+  that call it (one with its own edit script), a subagent, one self-contained post-edit hook per first-class framework,
+  an Antigravity rule, a Claude Code command, and a Pi extension that registers the server, with a prompt template.
 - The Agent Plugins manifest as the single source of identity and version, with the Codex hooks path in its `com.openai`
   extension.
 - Generation of every native entry file from the sources and the per-framework integrations, with validation that
@@ -26,7 +26,7 @@ approved the plan in conversation on 2026-10-26 before the label workflow existe
 ### New Capabilities
 
 - `plugin-manifest`: the identity and version source and the native manifests derived from it.
-- `todo-scan`: the marker format, the scan, and the report every component shares.
+- `todo-scan`: the marker format, the scan procedure, and how skills reach the scan.
 - `todo-triage`: deciding what happens to each marker.
 - `todo-triager-agent`: the classifying subagent and how each framework receives it.
 - `todo-mcp-server`: the `list_todos` tool over stdio.
@@ -59,5 +59,7 @@ None; the repository had no specifications.
 
 - `plugin.json` is the only place the plugin's name, version, and description are written.
 - A shared agent file carries only `name`, `description`, and its body.
+- Each component type owns its code: skills and hooks import nothing outside their directory, and the scan is
+  implemented only in the MCP server.
 - No generated file is edited by hand; the generator is the only writer.
 - The generator never widens a permission, drops a tool restriction, or substitutes a transport.

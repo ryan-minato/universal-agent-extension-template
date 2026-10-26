@@ -1,6 +1,7 @@
 ## Purpose
 
-The scan is exposed as one MCP tool, `list_todos`, over stdio so every framework can call it without a shell.
+The MCP server is the one implementation of the scan, exposed over stdio as `list_todos` and `scan_file` so every
+framework, skill, and subagent calls the same code.
 
 ## ADDED Requirements
 
@@ -34,6 +35,21 @@ error, not a protocol error.
 
 - **WHEN** `root` does not exist
 - **THEN** the answer is a result with `isError: true` and a message naming the failure
+
+### Requirement: The scan_file tool
+
+`scan_file` SHALL accept a `path`, return that file's markers with line numbers in the text report and
+`structuredContent.entries`, and answer an unreadable or missing path with a tool error.
+
+#### Scenario: Re-checking an edited file
+
+- **WHEN** `tools/call` names `scan_file` with the path of a file holding one unowned marker
+- **THEN** the answer lists that marker with its line number
+
+#### Scenario: A missing file
+
+- **WHEN** `path` names a file that does not exist
+- **THEN** the answer is a result with `isError: true` naming the path
 
 ### Requirement: Declared for every framework
 

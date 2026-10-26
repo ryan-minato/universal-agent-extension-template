@@ -1,15 +1,60 @@
 #!/usr/bin/env node
-// Codex PostToolUse hook: remind the agent about unowned TODO/FIXME markers in a file it just
-// wrote. Codex's hook contract mirrors Claude Code's (JSON event on stdin, JSON on stdout, exit 0),
-// so the file path is read from tool_input.file_path when present and from tool_input.path as a
-// fallback; a patch with several files is reported per file.
-import { readJsonStdin, unownedReminder } from "../../../../lib/hook-todo-check.mjs";
+// Codex PostToolUse hook: remind the agent when a file it just wrote holds TODO/FIXME markers without
+// an owner, and point it at the plugin's tools. Codex's hook contract mirrors Claude Code's (JSON
+// event on stdin, JSON on stdout, exit 0), so the file path is read from tool_input.file_path, then
+// tool_input.path, then every entry of tool_input.files; a patch with several files is reported per
+// file. Output is a `systemMessage`.
+//
+// The detection is minimal and self-contained (one regex for the format in
+// skills/todo-scan/references/todo-format.md); the authoritative scan is the MCP server's
+// list_todos / scan_file. Each framework's hook carries its own copy of this check
+// (.agents/knowledge/architecture.md, Component roles).
+import { readFileSync } from "node:fs";
 
-const event = await readJsonStdin();
-const input = event?.tool_input ?? {};
-const candidates = [input.file_path, input.path, ...(Array.isArray(input.files) ? input.files : [])]
-    .filter((value) => typeof value === "string");
-const reminders = candidates.map(unownedReminder).filter((text) => text !== null);
-if (reminders.length > 0) {
-    process.stdout.write(JSON.stringify({ systemMessage: reminders.join("\n\n") }) + "\n");
+/** Line numbers of unowned markers: TODO or FIXME followed by a colon with no parenthesized owner. */
+export function unownedLines(content) {
+    const lines = [];
+    content.split(/\r?\n/).forEach((line, index) => {
+        if (/\b(TODO|FIXME)\s*:/.test(line)) lines.push(index + 1);
+    });
+    return lines;
+}
+
+/** The reminder for one file, or null when it has no unowned marker or cannot be read as text. */
+export function reminderFor(file, read = (path) => readFileSync(path, "utf8")) {
+    let content;
+    try {
+        content = read(file);
+    } catch {
+        return null;
+    }
+    const lines = unownedLines(content);
+    if (lines.length === 0) return null;
+    return `${file} has ${lines.length} TODO/FIXME marker(s) without an owner (line ${lines.join(", ")}). ` +
+        "Write TODO(<owner>): <text> or TODO(<owner>, #<issue>): <text>, or remove them; run the todo-tracker " +
+        "tool scan_file on this file to confirm, or the $todo-triage skill to decide what each one needs.";
+}
+
+/** The file paths a tool input names, in the fields Codex's file-writing tools use. */
+export function filesOf(input) {
+    const candidates = [input?.file_path, input?.path, ...(Array.isArray(input?.files) ? input.files : [])];
+    return candidates.filter((value) => typeof value === "string");
+}
+
+export async function readJsonStdin(stream = process.stdin) {
+    const chunks = [];
+    for await (const chunk of stream) chunks.push(chunk);
+    const text = Buffer.concat(chunks).toString("utf8").trim();
+    if (text === "") return null;
+    try {
+        return JSON.parse(text);
+    } catch {
+        return null;
+    }
+}
+
+if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+    const event = await readJsonStdin();
+    const reminders = filesOf(event?.tool_input).map((file) => reminderFor(file)).filter((text) => text !== null);
+    if (reminders.length > 0) process.stdout.write(JSON.stringify({ systemMessage: reminders.join("\n\n") }) + "\n");
 }

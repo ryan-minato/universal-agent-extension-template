@@ -15,6 +15,9 @@ Goals:
   `integrations/<fw>/` for the rest); checked by `just generate-check` and `just validate`.
 - Runtime that every consumer can run: zero-dependency Node ESM, Node 20 or newer. Checked by `node --check` in
   `just lint` and by the unit tests importing the modules.
+- One implementation per capability, owned by the component whose job it is: the MCP server owns the scan, skills call
+  its tools, hooks carry only their lifecycle logic. Checked by `just validate`'s import-boundary rule on skill and hook
+  scripts and by the hook tests sharing the server's fixture.
 - A conversion that cannot be faithful stops generation; checked by unit tests on the SSE case and the override allow
   lists.
 
@@ -26,6 +29,11 @@ Non-goals:
 - Running any framework in CI; the compatibility tests are structural.
 
 ## Decisions
+
+- **No shared runtime library.** A first draft kept a `lib/` imported by the skill script, the server, and the hooks; it
+  broke whenever a skill was distributed alone (OpenCode, a copied skill) and blurred which component owned the scan.
+  Rejected in favor of component roles: the server implements, skills call tools, hooks detect minimally and point at
+  the tools, the Pi extension only registers the server.
 
 - **Shared agents carry the intersection of front matter.** Rejected: a root `agents/` written in Antigravity's dialect
   with Claude Code stripping fields (the "shared" source would be one framework's), and root `agents/` as a generated

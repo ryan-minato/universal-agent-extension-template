@@ -7,10 +7,12 @@
 //   a marker with no parentheses     an unowned marker, the thing this plugin exists to surface
 //
 // Zero dependencies: this file ships inside the plugin and runs on the consumer's Node (>= 20).
-// Used by skills/todo-scan/scripts/scan.mjs, lib/mcp-server.mjs, the hook scripts under
-// integrations/*/hooks/scripts/, and integrations/pi/extensions/index.ts.
+// It is the MCP server's private module (mcp/todo-tracker/server.mjs): the scan is exposed to every
+// framework as the `list_todos` and `scan_file` tools, and nothing else imports this file. Skills
+// call the tools; hooks carry their own minimal detection (.agents/knowledge/architecture.md,
+// Component roles).
 //
-//   node lib/todo-scan.mjs [root] [--json] [--unowned-only] [--exclude <dir>]...
+//   node mcp/todo-tracker/scan.mjs [root] [--json] [--unowned-only] [--exclude <dir>]...
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
@@ -159,7 +161,7 @@ if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).
         options = parseArgs(process.argv.slice(2));
     } catch (error) {
         console.error(`error: ${error.message}`);
-        console.error("usage: node lib/todo-scan.mjs [root] [--json] [--unowned-only] [--exclude <dir>]...");
+        console.error("usage: node mcp/todo-tracker/scan.mjs [root] [--json] [--unowned-only] [--exclude <dir>]...");
         process.exit(2);
     }
     const entries = scanDirectory(options.root, { excludes: options.excludes });

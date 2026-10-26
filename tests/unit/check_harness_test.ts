@@ -3,7 +3,7 @@ import { referencedPaths, referencedRecipes } from "../../scripts/validate/check
 
 Deno.test("referencedPaths takes link targets and path-like inline code, not prose or URLs", () => {
     const text = "See [x](.agents/knowledge/a.md) and `scripts/validate/main.ts`, `just check`, `plugin.json`, " +
-        "`integrations/`, `${PLUGIN_ROOT}/lib/x.mjs`, [h](https://example.com), `rules/*.md`, `.claude/skills/`.";
+        "`integrations/`, `${PLUGIN_ROOT}/mcp/x.mjs`, [h](https://example.com), `rules/*.md`, `.claude/skills/`.";
     assertEquals(referencedPaths(text).sort(), [
         ".agents/knowledge/a.md",
         ".claude/skills/",

@@ -6,7 +6,7 @@
 # are declared so the sync keeps them. Colors are quoted: an unquoted one may be read as a number.
 - name: area:core
   color: "1d76db"
-  description: plugin.json, mcp.json, lib/, skills/, agents/, and the capability specs
+  description: plugin.json, mcp.json, mcp/, skills/, agents/, and the capability specs
 - name: area:codex
   color: "0e8a16"
   description: integrations/codex/, .codex-plugin/, .codex/

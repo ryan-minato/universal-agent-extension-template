@@ -11,9 +11,9 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
-- The `todo-tracker` sample plugin: `todo-scan` and `todo-triage` skills, the `todo-triager` subagent, the `list_todos`
-  MCP server, post-edit hooks for Codex, Claude Code, and Antigravity, an Antigravity rule, a Claude Code command, and a
-  Pi extension with a prompt template.
+- The `todo-tracker` sample plugin: the MCP server with `list_todos` and `scan_file`, the `todo-scan` and `todo-triage`
+  skills that call it, the `todo-triager` subagent, post-edit hooks for Codex, Claude Code, and Antigravity, an
+  Antigravity rule, a Claude Code command, and a Pi extension with a prompt template.
 - Generation of the native entry files for Codex, Claude Code, Antigravity, and Pi from the Agent Plugins manifest and
   `integrations/<framework>/`, with validation and compatibility tests.
 - The Codex agent-role installer (`integrations/codex/scripts/install-agents.mjs`).

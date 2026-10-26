@@ -19,13 +19,13 @@ the adopter's marketplace lists the plugin.
 
 ## What you get
 
-| Component                         | After install                                                                                             |
-| --------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Skills `todo-scan`, `todo-triage` | `/todo-tracker:todo-scan`, `/todo-tracker:todo-triage`                                                    |
-| Command `/todo-tracker:todos`     | Runs the scan with `--unowned-only`; kept as an example of the command mechanism (skills are preferred)   |
-| Subagent `todo-triager`           | Available to the Agent tool with the read-only tool list from its override (`Read`, `Grep`, `Glob`)       |
-| MCP tool `list_todos`             | `/mcp` lists the `todo-tracker` server                                                                    |
-| PostToolUse hook                  | After `Write`, `Edit`, or `MultiEdit`, unowned markers in the edited file come back as additional context |
+| Component                           | After install                                                                                                |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Skills `todo-scan`, `todo-triage`   | `/todo-tracker:todo-scan`, `/todo-tracker:todo-triage`                                                       |
+| Command `/todo-tracker:todos`       | Asks for `list_todos` with `unownedOnly`; kept as an example of the command mechanism (skills are preferred) |
+| Subagent `todo-triager`             | Available to the Agent tool with the read-only tool list from its override (`Read`, `Grep`, `Glob`)          |
+| MCP tools `list_todos`, `scan_file` | `/mcp` lists the `todo-tracker` server                                                                       |
+| PostToolUse hook                    | After `Write`, `Edit`, or `MultiEdit`, unowned markers in the edited file come back as additional context    |
 
 ## Validate
 

@@ -39,11 +39,13 @@ per component and framework, what is generated and what is verified to work afte
 The repository ships `todo-tracker`, a small plugin that exercises every component type so you can see each one working
 before you delete it:
 
-- **Skills** `todo-scan` and `todo-triage`: find TODO/FIXME markers, report the unowned ones, decide what to do with
-  them.
+- **MCP server** `todo-tracker`: the one implementation of the scan, exposed as the tools `list_todos` and `scan_file`
+  over stdio, zero dependencies.
+- **Skills** `todo-scan` and `todo-triage`: procedures that call those tools, report the unowned markers, and decide
+  what to do with them; the triage skill ships its own edit script.
 - **Subagent** `todo-triager`: classifies markers without editing files.
-- **MCP server** `list_todos`: the same scan as a tool, over stdio, zero dependencies.
-- **Hooks**: after a file edit, a reminder about unowned markers it now holds (one implementation per framework).
+- **Hooks**: after a file edit, a reminder about unowned markers it now holds, pointing at the tools (one self-contained
+  implementation per framework).
 - **Antigravity rule**, **Claude Code command**, **Pi extension and prompt**: the framework-specific extras.
 
 Install it to try the template end to end:

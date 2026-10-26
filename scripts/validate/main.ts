@@ -67,13 +67,59 @@ export async function integrationProblems(root: string): Promise<string[]> {
     return problems;
 }
 
+/** Every runtime script: the MCP servers, the skills' own scripts, the hook scripts, the Codex installer. */
+export async function runtimeScripts(root: string): Promise<string[]> {
+    const scripts: string[] = [];
+    for (const server of await listDirs(`${root}/mcp`)) {
+        for (const file of await listFiles(`${root}/mcp/${server}`, ".mjs")) scripts.push(`mcp/${server}/${file}`);
+    }
+    for (const skill of await listDirs(`${root}/skills`)) {
+        for (const file of await listFiles(`${root}/skills/${skill}/scripts`, ".mjs")) {
+            scripts.push(`skills/${skill}/scripts/${file}`);
+        }
+    }
+    for (const file of await listFiles(`${root}/integrations/codex/scripts`, ".mjs")) {
+        scripts.push(`integrations/codex/scripts/${file}`);
+    }
+    return scripts;
+}
+
+/**
+ * A skill is distributed on its own, so its scripts import nothing outside the skill directory; the
+ * same holds for a hook script, which is one framework's lifecycle code (architecture.md, Component roles).
+ */
+export async function selfContainmentProblems(root: string): Promise<string[]> {
+    const problems: string[] = [];
+    const check = async (path: string, what: string) => {
+        const text = await Deno.readTextFile(`${root}/${path}`);
+        for (const match of text.matchAll(/^\s*import\b[^;]*?from\s+["']([^"']+)["']/gm)) {
+            const specifier = match[1];
+            if (specifier.startsWith("..")) {
+                problems.push(
+                    `${path} imports ${
+                        JSON.stringify(specifier)
+                    }, outside its directory; ${what} must be self-contained (copy the code in, or call the MCP server's tool instead)`,
+                );
+            }
+        }
+    };
+    for (const skill of await listDirs(`${root}/skills`)) {
+        for (const file of await listFiles(`${root}/skills/${skill}/scripts`)) {
+            await check(`skills/${skill}/scripts/${file}`, "a skill script");
+        }
+    }
+    for (const fw of await listDirs(`${root}/integrations`)) {
+        for (const file of await listFiles(`${root}/integrations/${fw}/hooks/scripts`)) {
+            await check(`integrations/${fw}/hooks/scripts/${file}`, "a hook script");
+        }
+    }
+    return problems;
+}
+
 /** Runtime scripts must be plain Node ESM and executable without a build step. */
 export async function runtimeProblems(root: string): Promise<string[]> {
     const problems: string[] = [];
-    const scripts: string[] = [];
-    for (const dir of ["lib", "skills/todo-scan/scripts", "integrations/codex/scripts"]) {
-        for (const file of await listFiles(`${root}/${dir}`, ".mjs")) scripts.push(`${dir}/${file}`);
-    }
+    const scripts = await runtimeScripts(root);
     for (const fw of ["codex", "claude-code", "antigravity"]) {
         for (const file of await listFiles(`${root}/integrations/${fw}/hooks/scripts`, ".mjs")) {
             scripts.push(`integrations/${fw}/hooks/scripts/${file}`);
@@ -102,7 +148,12 @@ export async function main(root = ROOT): Promise<number> {
     } catch (error) {
         problems.push(errorText(error));
     }
-    problems.push(...await skillProblems(root), ...await integrationProblems(root), ...await runtimeProblems(root));
+    problems.push(
+        ...await skillProblems(root),
+        ...await integrationProblems(root),
+        ...await runtimeProblems(root),
+        ...await selfContainmentProblems(root),
+    );
     if (problems.length > 0) {
         console.error("Plugin validation found problems:");
         for (const problem of problems) console.error(problem.startsWith("- ") ? problem : `- ${problem}`);

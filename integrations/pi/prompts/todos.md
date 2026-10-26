@@ -1,7 +1,8 @@
 ---
-description: Scan the workspace for TODO/FIXME markers and list the unowned ones
+description: List the unowned TODO/FIXME markers of the workspace through the todo-tracker MCP tool
 argument-hint: "[directory]"
 ---
 
-Run the `list_todos` tool on `${1:-.}` with unownedOnly set to true. Report the first line of its output verbatim, then
-the entries. If I ask to resolve them rather than list them, continue with the `todo-triage` skill.
+Call the `todo-tracker` MCP tool `list_todos` with unownedOnly set to true${1:+ and root set to `$1`}. Report the first
+line of its output verbatim, then the entries. If I ask to resolve them rather than list them, continue with the
+`todo-triage` skill.
