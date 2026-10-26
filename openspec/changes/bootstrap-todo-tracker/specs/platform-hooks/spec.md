@@ -39,13 +39,15 @@ additional context and never block.
 
 ### Requirement: Codex reminder
 
-After a file-writing tool, Codex's hook SHALL return the same reminder as a `systemMessage`, reading the file path from
-the tool input's `file_path`, `path`, or `files`.
+After a file-writing tool, Codex's hook SHALL return the same reminder both as `hookSpecificOutput.additionalContext`
+(what the model reads) and as a `systemMessage` (what the UI shows), reading the file paths from an `apply_patch`
+command's `*** Add File:` and `*** Update File:` lines resolved against the event's `cwd`, or from the tool input's
+`file_path`, `path`, or `files`.
 
 #### Scenario: A patch with several files
 
-- **WHEN** the tool input lists two files and one holds an unowned marker
-- **THEN** the system message names that file only
+- **WHEN** the patch adds two files and one holds an unowned marker
+- **THEN** both outputs name that file only
 
 ### Requirement: Antigravity reminder
 

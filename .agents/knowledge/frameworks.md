@@ -36,8 +36,11 @@ with the new date.
   `approval_policy`, `model_provider`, or `mcp_servers`.
 - Hooks: `hooks/hooks.json` or the manifest `hooks` path; same shape as Claude Code; events SessionStart, SessionEnd,
   PreToolUse, PermissionRequest, PostToolUse, PreCompact, PostCompact, UserPromptSubmit, SubagentStart, SubagentStop,
-  Stop, Interrupt. Codex sets `PLUGIN_ROOT` and `CLAUDE_PLUGIN_ROOT` for hook commands. Non-managed hooks must be
-  trusted by the user.
+  Stop, Interrupt. Codex sets `PLUGIN_ROOT` and `CLAUDE_PLUGIN_ROOT` for hook commands. PostToolUse input for Codex's
+  own editor is `tool_name: "apply_patch"` with the patch text in `tool_input.command` (matcher `apply_patch`, `Edit`,
+  or `Write`); the output's `hookSpecificOutput.additionalContext` becomes developer context for the model while
+  `systemMessage` is only a UI warning, so a reminder the model must act on goes in `additionalContext` (docs read
+  2026-10-26). Non-managed hooks must be trusted by the user.
 - Project skills: every `.agents/skills/` from the cwd up to the repository root. `AGENTS.md` is concatenated from the
   repository root down to the cwd (32 KiB cap).
 - Install: a marketplace root must hold `.agents/plugins/marketplace.json` (`name`, `interface.displayName`, `plugins[]`

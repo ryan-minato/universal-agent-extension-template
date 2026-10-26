@@ -1,15 +1,19 @@
 #!/usr/bin/env node
 // Codex PostToolUse hook: remind the agent when a file it just wrote holds TODO/FIXME markers without
 // an owner, and point it at the plugin's tools. Codex's hook contract mirrors Claude Code's (JSON
-// event on stdin, JSON on stdout, exit 0), so the file path is read from tool_input.file_path, then
-// tool_input.path, then every entry of tool_input.files; a patch with several files is reported per
-// file. Output is a `systemMessage`.
+// event on stdin, JSON on stdout, exit 0). Codex's own editing tool is apply_patch, whose
+// tool_input.command is the patch text, so the file paths are read from its "*** Add File:" and
+// "*** Update File:" lines (relative to the event's cwd); file_path, path, and files are read for
+// clients that use Claude-style inputs. The reminder goes out twice: as
+// hookSpecificOutput.additionalContext, which Codex adds to the model's context, and as a
+// systemMessage, which the UI shows as a warning (learn.chatgpt.com/docs/hooks, 2026-10-26).
 //
 // The detection is minimal and self-contained (one regex for the format in
 // skills/todo-scan/references/todo-format.md); the authoritative scan is the MCP server's
 // list_todos / scan_file. Each framework's hook carries its own copy of this check
 // (.agents/knowledge/architecture.md, Component roles).
 import { readFileSync } from "node:fs";
+import { isAbsolute, resolve } from "node:path";
 
 /** Line numbers of unowned markers: TODO or FIXME followed by a colon with no parenthesized owner. */
 export function unownedLines(content) {
@@ -35,10 +39,23 @@ export function reminderFor(file, read = (path) => readFileSync(path, "utf8")) {
         "tool scan_file on this file to confirm, or the $todo-triage skill to decide what each one needs.";
 }
 
-/** The file paths a tool input names, in the fields Codex's file-writing tools use. */
-export function filesOf(input) {
-    const candidates = [input?.file_path, input?.path, ...(Array.isArray(input?.files) ? input.files : [])];
-    return candidates.filter((value) => typeof value === "string");
+/** The files an apply_patch command adds or updates (a "*** Delete File" line has nothing left to scan). */
+export function patchFiles(command) {
+    if (typeof command !== "string") return [];
+    return [...command.matchAll(/^\*\*\* (?:Add|Update) File: (.+)$/gm)].map((match) => match[1].trim());
+}
+
+/** The file paths a tool input names: the apply_patch command's files, then the Claude-style fields. */
+export function filesOf(input, cwd = process.cwd()) {
+    const candidates = [
+        ...patchFiles(input?.command),
+        input?.file_path,
+        input?.path,
+        ...(Array.isArray(input?.files) ? input.files : []),
+    ];
+    return candidates.filter((value) => typeof value === "string").map((file) =>
+        isAbsolute(file) ? file : resolve(cwd, file)
+    );
 }
 
 export async function readJsonStdin(stream = process.stdin) {
@@ -55,6 +72,15 @@ export async function readJsonStdin(stream = process.stdin) {
 
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
     const event = await readJsonStdin();
-    const reminders = filesOf(event?.tool_input).map((file) => reminderFor(file)).filter((text) => text !== null);
-    if (reminders.length > 0) process.stdout.write(JSON.stringify({ systemMessage: reminders.join("\n\n") }) + "\n");
+    const cwd = typeof event?.cwd === "string" ? event.cwd : process.cwd();
+    const reminders = filesOf(event?.tool_input, cwd).map((file) => reminderFor(file)).filter((text) => text !== null);
+    if (reminders.length > 0) {
+        const text = reminders.join("\n\n");
+        process.stdout.write(
+            JSON.stringify({
+                systemMessage: text,
+                hookSpecificOutput: { hookEventName: "PostToolUse", additionalContext: text },
+            }) + "\n",
+        );
+    }
 }

@@ -24,12 +24,12 @@ the default policy with `approvals_reviewer = "auto_review"` approves it (observ
 
 ## What you get
 
-| Component                           | After install                                                                                                                                                                 |
-| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Skills `todo-scan`, `todo-triage`   | Offered as `todo-tracker:todo-scan` and `todo-tracker:todo-triage` (`$todo-scan` in a prompt)                                                                                 |
-| MCP tools `list_todos`, `scan_file` | `mcp__todo_tracker__list_todos` and `mcp__todo_tracker__scan_file` (`mcp.json`, stdio, `node`); the skills call them                                                          |
-| PostToolUse hook                    | A `systemMessage` reminder after a file write that leaves unowned markers; runs only after you trust the hook in the TUI's `/hooks` (installing the plugin does not trust it) |
-| Subagent `todo-triager`             | **Not registered by the plugin.** Codex plugins cannot register agent roles. Install the generated role explicitly (next section).                                            |
+| Component                           | After install                                                                                                                                                                                                          |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Skills `todo-scan`, `todo-triage`   | Offered as `todo-tracker:todo-scan` and `todo-tracker:todo-triage` (`$todo-scan` in a prompt)                                                                                                                          |
+| MCP tools `list_todos`, `scan_file` | `mcp__todo_tracker__list_todos` and `mcp__todo_tracker__scan_file` (`mcp.json`, stdio, `node`); the skills call them                                                                                                   |
+| PostToolUse hook                    | A reminder after an `apply_patch` that leaves unowned markers, as developer context for the model and a UI warning; runs only after you trust the hook in the TUI's `/hooks` (installing the plugin does not trust it) |
+| Subagent `todo-triager`             | **Not registered by the plugin.** Codex plugins cannot register agent roles. Install the generated role explicitly (next section).                                                                                     |
 
 ## Install the subagent
 

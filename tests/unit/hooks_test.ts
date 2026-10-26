@@ -23,8 +23,12 @@ for (const [name, hook] of Object.entries({ antigravity, claude, codex })) {
 }
 
 Deno.test("the codex and antigravity hooks read every documented file field", () => {
-    assertEquals(codex.filesOf({ file_path: "a", path: "b", files: ["c", 1] }), ["a", "b", "c"]);
+    assertEquals(codex.filesOf({ file_path: "/a", path: "b", files: ["/c", 1] }, "/w"), ["/a", "/w/b", "/c"]);
     assertEquals(codex.filesOf(undefined), []);
+    const patch = "*** Begin Patch\n*** Add File: b.js\n+// TODO: x\n*** Update File: src/a.js\n@@\n-1\n+2\n" +
+        "*** Delete File: gone.js\n*** End Patch";
+    assertEquals(codex.patchFiles(patch), ["b.js", "src/a.js"]);
+    assertEquals(codex.filesOf({ command: patch }, "/w"), ["/w/b.js", "/w/src/a.js"]);
     assertEquals(antigravity.filesOf({ TargetFile: "x", path: "y" }), ["x", "y"]);
 });
 
@@ -50,9 +54,15 @@ Deno.test("each hook script runs end to end on its framework's stdin shape", asy
     assertStringIncludes(JSON.parse(claudeRun.out).hookSpecificOutput.additionalContext, "2 TODO/FIXME");
     const codexRun = await run(
         "integrations/codex/hooks/scripts/post-edit-todo.mjs",
-        JSON.stringify({ tool_input: { files: [SAMPLE] } }),
+        JSON.stringify({
+            cwd: dirname(SAMPLE),
+            tool_name: "apply_patch",
+            tool_input: { command: "*** Begin Patch\n*** Update File: app.js\n@@\n-a\n+b\n*** End Patch" },
+        }),
     );
-    assertStringIncludes(JSON.parse(codexRun.out).systemMessage, "$todo-triage");
+    const codexOut = JSON.parse(codexRun.out);
+    assertStringIncludes(codexOut.systemMessage, "$todo-triage");
+    assertEquals(codexOut.hookSpecificOutput.additionalContext, codexOut.systemMessage);
     const agRun = await run(
         "integrations/antigravity/hooks/scripts/post-edit-todo.mjs",
         JSON.stringify({ toolCall: { args: { TargetFile: SAMPLE } } }),
