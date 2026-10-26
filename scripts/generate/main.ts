@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run --allow-read --allow-write
+#!/usr/bin/env -S deno run --allow-read --allow-write --allow-run=deno
 // Generates every native entry file from the sources (.agents/knowledge/architecture.md, Generated
 // files): the framework manifests, the Claude Code agents, the Codex agent roles, the MCP copies,
 // Antigravity's hooks.json and rules/, and the Pi package.json. Generated files are committed; this
@@ -8,7 +8,7 @@
 //   scripts/generate/main.ts --check    exit 1 when a generated file differs or is stale; write nothing
 import { parseArgs } from "jsr:@std/cli@1.0.32/parse-args";
 import { dirname } from "jsr:@std/path@1.1.6";
-import { errorText, exists, listFiles, ROOT } from "../lib/repo.ts";
+import { errorText, exists, formatMarkdown, listFiles, ROOT } from "../lib/repo.ts";
 import {
     antigravityAgentProblems,
     claudeAgent,
@@ -104,6 +104,11 @@ export async function generateAll(root = ROOT): Promise<Output[]> {
         const patch = await loadPiPatch(root);
         if (patch === null) throw new Error("integrations/pi exists but integrations/pi/package.patch.json is missing");
         outputs.push({ path: "package.json", content: json(piPackage(plugin, patch)) });
+    }
+
+    // Generated Markdown goes through the formatter the pre-commit hook applies, so it is byte-stable.
+    for (const output of outputs) {
+        if (output.path.endsWith(".md")) output.content = await formatMarkdown(output.content);
     }
 
     const seen = new Set<string>();

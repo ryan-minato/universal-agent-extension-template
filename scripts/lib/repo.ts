@@ -78,3 +78,23 @@ export async function run(command: string, args: string[], cwd = ROOT): Promise<
 
 /** Joins `parts` under the repository root. */
 export const at = (...parts: string[]) => join(ROOT, ...parts);
+
+/**
+ * Formats Markdown the way the pre-commit hook will (deno fmt with this repository's deno.json and
+ * .editorconfig), so a generated Markdown file is byte-stable across generation and commit.
+ */
+export async function formatMarkdown(text: string): Promise<string> {
+    const child = new Deno.Command("deno", {
+        args: ["fmt", "--ext", "md", "-"],
+        cwd: ROOT,
+        stdin: "piped",
+        stdout: "piped",
+        stderr: "piped",
+    }).spawn();
+    const writer = child.stdin.getWriter();
+    await writer.write(new TextEncoder().encode(text));
+    await writer.close();
+    const output = await child.output();
+    if (!output.success) throw new Error(`deno fmt failed: ${new TextDecoder().decode(output.stderr).trim()}`);
+    return new TextDecoder().decode(output.stdout);
+}

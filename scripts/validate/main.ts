@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run --allow-read --allow-run=node
+#!/usr/bin/env -S deno run --allow-read --allow-run=node,deno
 // Validates the plugin sources and the generated files against the rules in
 // .agents/knowledge/architecture.md: the manifest, mcp.json, the skills, the shared agents and
 // their overrides, every integration file the generator reads, and that the committed generated
