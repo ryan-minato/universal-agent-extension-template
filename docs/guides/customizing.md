@@ -3,6 +3,15 @@
 Where each kind of change goes, and what the generator does with it. The authoritative table is
 `.agents/knowledge/architecture.md` in the repository; this page is the reader's version.
 
+## Which component carries what
+
+Cut a feature into parts before placing files. A computation or lookup every agent should perform identically is an MCP
+tool; a procedure with judgment or ordering is a skill that names the tools it calls; a reaction to a framework event is
+a hook, written once per framework, that detects and points at the tool or skill; a delegated role is a subagent;
+commands, prompts, and rules frame one framework and implement nothing. One capability has one implementation. The
+repository's `.agents/knowledge/component-design.md` holds the decision table, the splitting rules, and the rules a
+skill, hook, and tool description follow.
+
 ## Identity and version
 
 Edit `plugin.json`. Every native manifest and the Pi `package.json` derive their public fields from it; a field repeated

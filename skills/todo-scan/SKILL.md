@@ -1,6 +1,6 @@
 ---
 name: todo-scan
-description: Finds the TODO and FIXME markers of the workspace through the todo-tracker MCP tools and reports the unowned ones with file and line. Use before a review, a release, or when asked what is still left to do in the code; also when a hook reports an unowned marker.
+description: Finds the TODO and FIXME markers of the workspace through the todo-tracker MCP tools and reports the unowned ones with file and line. Use when asked what is still left to do in the code, before a review or a release, or when a hook reports an unowned marker. Not for deciding what happens to each marker (todo-triage).
 license: Apache-2.0
 compatibility: Needs the todo-tracker MCP server the plugin registers (tools list_todos and scan_file).
 metadata:

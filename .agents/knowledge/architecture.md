@@ -42,28 +42,14 @@ only thing that writes them and `just generate-check` fails CI when a committed 
 | Commands                  | `integrations/claude-code/commands/*.md`                                                                                         | —                                                                                                            | Claude Code only; skills are preferred for new work                                                                                                                                                                                                                |
 | Rules                     | `integrations/antigravity/rules/*.md`                                                                                            | `rules/*.md`                                                                                                 | Antigravity only; `trigger` front matter required                                                                                                                                                                                                                  |
 | Pi package                | `integrations/pi/package.patch.json`, `integrations/pi/extensions/`, `integrations/pi/prompts/`                                  | `package.json`                                                                                               | The patch holds the scoped npm name and the `pi` component map; everything else derives from `plugin.json`                                                                                                                                                         |
-| Runtime code              | `mcp/<server>/*.mjs`, `skills/<name>/scripts/*.mjs`, `integrations/<fw>/hooks/scripts/*.mjs`, `integrations/codex/scripts/*.mjs` | —                                                                                                            | Zero-dependency Node ESM (Node 20+), the one runtime every consumer has; ships with the plugin. Each component type owns its code (Component roles)                                                                                                                |
+| Runtime code              | `mcp/<server>/*.mjs`, `skills/<name>/scripts/*.mjs`, `integrations/<fw>/hooks/scripts/*.mjs`, `integrations/codex/scripts/*.mjs` | —                                                                                                            | Zero-dependency Node ESM (Node 20+), the one runtime every consumer has; ships with the plugin. Each component type owns its code (`component-design.md`)                                                                                                          |
 | Management code           | `scripts/`, `tests/`, `justfile`, `deno.json`                                                                                    | —                                                                                                            | Deno TypeScript; never shipped; never bound to a skill's script                                                                                                                                                                                                    |
 
 ## Component roles
 
-One capability, one implementation, in the component whose job it is; the other components call it or stay in their
-lane:
-
-- **MCP servers** (`mcp/<server>/`) own connectivity: a capability an agent can call is implemented once there and
-  exposed as tools. Nothing else imports a server's modules.
-- **Skills** own procedure: they name the MCP tools they call and compose their results. A skill may ship its own
-  `scripts/` for work that is the skill's alone (the triage skill's edit applier); those scripts import nothing outside
-  the skill directory, because a skill is distributed on its own.
-- **Hooks** own one framework's lifecycle: deciding when to speak after an event, in that framework's contract. A hook
-  that must look at a file carries its own minimal check and points the agent at the MCP tool for the authoritative
-  answer; it imports nothing outside its directory.
-- **Framework extensions** (the Pi extension, Claude commands, Antigravity rules) own registration and framing for that
-  framework and reimplement nothing.
-
-A format or rule both a server and a hook must know (the TODO marker syntax) is defined in one reference
-(`skills/todo-scan/references/todo-format.md`) and each implementation is held to the same test fixture; the
-implementations are not shared. `just validate` enforces the import boundary for skill and hook scripts.
+Which component type carries which part of a feature, how a feature is cut into components, and the rules for writing a
+skill, a subagent body, a hook, or a tool description are in `component-design.md`; read it before adding a component.
+The import boundary it sets for skill and hook scripts is enforced by `just validate`.
 
 ## Subagent discovery rules
 

@@ -1,12 +1,12 @@
 ---
 name: template-adopt
 description: >-
-  Turns a copy of this template into the adopter's own plugin: renames the plugin everywhere its
-  name is a source, removes the components and framework integrations the adopter does not want,
-  replaces the todo-tracker sample with the adopter's first component, regenerates the native entry
-  files, and resets the documentation, changelog, and specs. Use right after creating a repository
-  from the template, when asked to "adopt", "customize", or "strip down" the template, or when a
-  leftover todo-tracker reference turns up in a plugin that is not todo-tracker.
+  Turns a copy of this template into the adopter's own plugin: renames it, removes unwanted
+  components and framework integrations, replaces the todo-tracker sample, regenerates the native
+  entry files, and resets docs, changelog, and specs. Use when a repository was just created from
+  the template, when asked to "adopt", "customize", or "strip down" the template, or when a leftover
+  todo-tracker reference turns up in a plugin that is not todo-tracker. Not for adding a component
+  to an already adopted plugin (component-design.md).
 ---
 
 # Adopt the template
@@ -37,7 +37,7 @@ Skip any file step 3 will delete (for example the Pi patch or the Codex installe
 7. `.github/CODEOWNERS`, `.github/ISSUE_TEMPLATE/config.yml`, `SECURITY.md`, `SUPPORT.md`: the owner and the repository
    URL.
 
-Check: `scripts/adopt_checklist.ts` (in this skill's directory) prints every remaining `todo-tracker`, `ryan-minato`,
+Check: [`scripts/adopt_checklist.ts`](scripts/adopt_checklist.ts) prints every remaining `todo-tracker`, `ryan-minato`,
 and `universal-agent-extension-template` occurrence outside `openspec/changes/archive/`; the list must be empty, or each
 hit explained in the PR.
 
@@ -59,10 +59,10 @@ for a removed framework.
 
 ## 4. Add your first component
 
-Follow `.agents/knowledge/architecture.md` (Component sources) for where each kind lives, then `just generate`, then
-extend `tests/compatibility/<framework>/` with the shape the new component must have. Behavior changes go through an
-OpenSpec change (`.agents/knowledge/spec-workflow.md`); the adoption itself is a harness-tier change with
-`skip_specs: true`.
+Design it with `.agents/knowledge/component-design.md` (which component type carries which part, and the skill rules),
+place it where `.agents/knowledge/architecture.md` (Component sources) says, then `just generate`, then extend
+`tests/compatibility/<framework>/` with the shape the new component must have. Behavior changes go through an OpenSpec
+change (`.agents/knowledge/spec-workflow.md`); the adoption itself is a harness-tier change with `skip_specs: true`.
 
 ## 5. Reset the record
 

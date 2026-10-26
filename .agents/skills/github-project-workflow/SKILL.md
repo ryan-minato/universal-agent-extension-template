@@ -83,9 +83,8 @@ survive deletion, and public content is indexed within minutes. Every remote or 
 
 1. Run `just check`; for a change that touches a framework's files, run `just smoke <framework>` where its CLI exists
    and record the manual steps that remain in the Validation section. Then the CI path: the publish gate's review, the
-   push, then watch the Actions run. Diagnose a red run with
-   `.agents/skills/github-project-workflow/scripts/run_log_digest.ts --run-id <id>`; never fetch full logs, never weaken
-   a check (`github/checks.md` maps jobs to commands).
+   push, then watch the Actions run. Diagnose a red run with [`scripts/run_log_digest.ts`](scripts/run_log_digest.ts)
+   (`--run-id <id>`); never fetch full logs, never weaken a check (`github/checks.md` maps jobs to commands).
 2. Complete the PR checklist and update the description: `Phase: implementation`; Changes as permalinks to the commits;
    Validation naming each Acceptance item and scenario with its result, linking the CI run; every task of the change
    ticked. Then follow `agent-authority.md`: you may mark the PR ready (`gh pr ready`) and request review once

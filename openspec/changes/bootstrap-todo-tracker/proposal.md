@@ -32,7 +32,7 @@ approved the plan in conversation on 2026-10-26 before the label workflow existe
 - `todo-mcp-server`: the `list_todos` tool over stdio.
 - `platform-hooks`: the post-edit reminder on each framework.
 - `pi-package`: what Pi installs.
-- `generation`: the rules the generator and validator enforce on sources and generated files.
+- `generation`: the rules the generator and validator enforce on sources, skills, and generated files.
 
 ### Modified Capabilities
 

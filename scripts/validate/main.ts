@@ -1,55 +1,18 @@
 #!/usr/bin/env -S deno run --allow-read --allow-run=node,deno
 // Validates the plugin sources and the generated files against the rules in
-// .agents/knowledge/architecture.md: the manifest, mcp.json, the skills, the shared agents and
+// .agents/knowledge/architecture.md and component-design.md: the manifest, mcp.json, the skills, the shared agents and
 // their overrides, every integration file the generator reads, and that the committed generated
 // files equal what the sources produce. Prints every finding with its fix; exit 1 on any.
 //
 //   scripts/validate/main.ts
-import { splitFrontmatter } from "../lib/frontmatter.ts";
-import { errorText, exists, listDirs, listFiles, ROOT } from "../lib/repo.ts";
+import { errorText, listDirs, listFiles, ROOT } from "../lib/repo.ts";
+import { skillsRootProblems } from "../lib/skills.ts";
 import { differences, generateAll, staleFiles } from "../generate/main.ts";
 import { FRAMEWORKS } from "../generate/lib/overrides.ts";
 
-const SKILL_NAME = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-
-/** Problems with skills/: one level of <name>/SKILL.md, name equals the directory, description within limits. */
-export async function skillProblems(root: string): Promise<string[]> {
-    const problems: string[] = [];
-    const dir = `${root}/skills`;
-    for (const file of await listFiles(dir)) {
-        problems.push(`skills/${file} is a file; skills/ holds only <name>/SKILL.md directories`);
-    }
-    for (const name of await listDirs(dir)) {
-        const path = `skills/${name}/SKILL.md`;
-        if (!(await exists(`${root}/${path}`))) {
-            problems.push(`skills/${name}/ has no SKILL.md; every immediate child of skills/ must be a skill`);
-            continue;
-        }
-        if (!SKILL_NAME.test(name) || name.length > 64) {
-            problems.push(`skills/${name}: the name must be 1–64 lowercase words joined by hyphens`);
-        }
-        try {
-            const { data, body } = splitFrontmatter(await Deno.readTextFile(`${root}/${path}`), path);
-            if (data.name !== name) {
-                problems.push(`${path}: "name" must equal the directory name ${JSON.stringify(name)}`);
-            }
-            const description = data.description;
-            if (typeof description !== "string" || description.trim() === "" || description.length > 1024) {
-                problems.push(`${path}: "description" must be a non-empty string of at most 1024 characters`);
-            }
-            if (body.trim() === "") problems.push(`${path}: the body is empty`);
-            for (const nested of await listDirs(`${root}/skills/${name}`)) {
-                if (await exists(`${root}/skills/${name}/${nested}/SKILL.md`)) {
-                    problems.push(
-                        `skills/${name}/${nested}/SKILL.md is nested; clients scan one level only, so it is never loaded`,
-                    );
-                }
-            }
-        } catch (error) {
-            problems.push(errorText(error));
-        }
-    }
-    return problems;
+/** Problems with skills/: the spec's hard rules plus the skill rules of component-design.md (scripts/lib/skills.ts). */
+export function skillProblems(root: string): Promise<string[]> {
+    return skillsRootProblems(`${root}/skills`, "skills");
 }
 
 /** Problems with integrations/: only known frameworks, and each with at least one file. */

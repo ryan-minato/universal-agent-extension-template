@@ -2,11 +2,14 @@
 // Checks the harness itself the way CI checks code (.agents/knowledge/maintenance.md, Two-way
 // synchronization): every repository path AGENTS.md, the knowledge base, and the project skills
 // name exists, every `just <recipe>` they name is a recipe, no CLAUDE.md shadows AGENTS.md, the
-// entrypoint stays within its length budget, and every Claude Code skill is a link into
-// .agents/skills/. Findings name the file and the fix.
+// entrypoint stays within its length budget, every Claude Code skill is a link into
+// .agents/skills/, and the project skills follow the skill rules of component-design.md
+// (OpenSpec's generated skills and its .openspec-target marker are exempt: regenerated, not written). Findings name the
+// file and the fix.
 //
 //   scripts/validate/check_harness.ts
 import { exists, listFiles, ROOT, run } from "../lib/repo.ts";
+import { skillsRootProblems } from "../lib/skills.ts";
 
 export const ENTRYPOINT_BUDGET = 130;
 
@@ -110,6 +113,13 @@ export async function main(root = ROOT): Promise<number> {
             );
         }
     }
+    problems.push(
+        ...await skillsRootProblems(
+            `${root}/.agents/skills`,
+            ".agents/skills",
+            (name) => name.startsWith("openspec-") || name.startsWith("."),
+        ),
+    );
     if (problems.length > 0) {
         console.error("Harness checks found problems:");
         for (const problem of problems) console.error(`- ${problem}`);

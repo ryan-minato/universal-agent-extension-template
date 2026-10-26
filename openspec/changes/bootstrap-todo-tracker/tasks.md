@@ -17,6 +17,8 @@ conversation on 2026-10-26.
 - [x] 2.2 Unit tests for the scanner, server, hook helper, installer, generator modules, release rules
 - [x] 2.3 Compatibility tests under `tests/compatibility/<framework>/`; installation tests
 - [x] 2.4 `claude plugin validate . --strict` passes
+- [x] 2.5 Skill rules in `scripts/lib/skills.ts`, applied to the plugin skills by the validator and to the project
+      skills by the harness check
 
 ## 3. Documentation and release record
 

@@ -40,6 +40,23 @@ fails generation.
 - **WHEN** `integrations/codex/agents/<name>.override.yaml` sets `tools`
 - **THEN** generation fails listing the keys Codex accepts
 
+### Requirement: Skill rules
+
+The validator SHALL check every skill under `skills/` against the mechanical skill rules of
+`.agents/knowledge/component-design.md`: `name` equals the directory, the description opens on the capability and
+carries a trigger clause, every bundled file under `scripts/`, `references/`, or `assets/` is linked from `SKILL.md` by
+a relative link, no link leaves the skill directory, no skill is nested, and no `README.md` sits beside `SKILL.md`.
+
+#### Scenario: A description without a trigger
+
+- **WHEN** a skill's description has no "Use when …" clause
+- **THEN** `just validate` fails naming the file and the clause to add
+
+#### Scenario: An unlinked script
+
+- **WHEN** `skills/<name>/scripts/` holds a file `SKILL.md` never links
+- **THEN** `just validate` fails naming the file to link
+
 ### Requirement: Generated Markdown is formatter-stable
 
 Generated Markdown SHALL be byte-identical before and after the repository's formatter runs.
