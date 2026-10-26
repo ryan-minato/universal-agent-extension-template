@@ -1,0 +1,46 @@
+name: Bug report
+description: The plugin or the template's tooling behaves differently from its specification or documentation.
+labels: ["bug", "status/needs-triage"]
+body:
+  - type: input
+    id: area
+    attributes:
+      label: Where
+      description: The framework and its version (e.g. `claude-code 2.1.310`), or the repository area (`core`, `codex`, `claude-code`, `antigravity`, `pi`, `docs`, `ci`, `scripts`, `spec-workflow`, `harness`).
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Plugin version
+      description: The `version` of plugin.json or the tag you installed.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happens
+      description: The observed behavior, exactly. Paste the framework's output or the CI log rather than paraphrasing it.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should happen
+      description: The intended behavior. Together with the field above this is the acceptance baseline for the fix.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How to reproduce
+      description: The install command, the configuration, and the steps that show the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and references
+      description: Related issues or PRs, framework documentation, upstream changes you suspect.
+    validations:
+      required: false

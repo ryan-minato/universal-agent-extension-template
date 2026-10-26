@@ -1,0 +1,16 @@
+# Categories of the generated release notes, by merged pull-request labels (.agents/knowledge/github/checks.md,
+# Release path). Every label named here is declared in .github/labels.yml; `just labels --check` verifies it.
+changelog:
+  exclude:
+    labels: [duplicate, invalid, wontfix]
+  categories:
+    - title: New
+      labels: [enhancement]
+    - title: Fixed
+      labels: [bug]
+    - title: Documentation
+      labels: [documentation, area:docs]
+    - title: Tooling and harness
+      labels: [area:ci, area:scripts, area:harness, area:spec-workflow]
+    - title: Other changes
+      labels: ["*"]

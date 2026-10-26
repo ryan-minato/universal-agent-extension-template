@@ -1,10 +1,11 @@
-#!/usr/bin/env -S deno run --allow-read --allow-write --allow-run=openspec --allow-env=OPENSPEC_NO_UPDATE_CHECK,OPENSPEC_TELEMETRY,HOME,PATH
+#!/usr/bin/env -S deno run --allow-read --allow-write --allow-run=openspec,deno --allow-env=OPENSPEC_NO_UPDATE_CHECK,OPENSPEC_TELEMETRY,HOME,PATH
 // Two checks OpenSpec's own validator does not make (.agents/knowledge/spec-workflow.md):
 // - openspec/config.yaml holds no rule OpenSpec would drop: a rule that is not a string (an
 //   unquoted "colon space" parses as a mapping) drops the whole artifact's rules with a warning.
 // - The generated skills under .agents/skills/openspec-* equal what `openspec init --tools agents`
-//   produces now, so a drift after an upgrade is visible. The regeneration runs in a temporary
-//   directory; nothing in the working tree changes.
+//   produces now, formatted with the repository's `deno fmt` (the pre-commit hook formats every
+//   committed Markdown file, generated ones included), so a drift after an upgrade is visible. The
+//   regeneration runs in a temporary directory; nothing in the working tree changes.
 //
 //   scripts/validate/check_openspec.ts
 import { join } from "jsr:@std/path@1.1.6";
@@ -69,6 +70,17 @@ export async function generatedSkillProblems(root: string): Promise<string[]> {
                 `openspec init failed in the temporary directory: ${new TextDecoder().decode(output.stderr).trim()}`,
             ];
         }
+        // Format the fresh copy the way the pre-commit hook formats the committed one: deno fmt reads the
+        // repository's deno.json and the .editorconfig beside the files, so both travel to the copy.
+        await Deno.copyFile(join(root, ".editorconfig"), join(temp, ".editorconfig"));
+        const format = await new Deno.Command("deno", {
+            args: ["fmt", "--config", join(root, "deno.json"), join(temp, SKILLS_DIR)],
+            stdout: "piped",
+            stderr: "piped",
+        }).output();
+        if (!format.success) {
+            return [`deno fmt failed on the regenerated skills: ${new TextDecoder().decode(format.stderr).trim()}`];
+        }
         const problems: string[] = [];
         const expected = await readTree(join(temp, SKILLS_DIR));
         for (const [path, content] of expected) {
@@ -77,7 +89,7 @@ export async function generatedSkillProblems(root: string): Promise<string[]> {
                 problems.push(`${SKILLS_DIR}/${path} is missing; run openspec init --tools agents`);
             } else if ((await Deno.readTextFile(ours)) !== content) {
                 problems.push(
-                    `${SKILLS_DIR}/${path} differs from what openspec init --tools agents produces; regenerate it, never hand-edit it`,
+                    `${SKILLS_DIR}/${path} differs from what openspec init --tools agents produces; regenerate it with openspec init --tools agents and deno fmt, never hand-edit it`,
                 );
             }
         }

@@ -1,0 +1,49 @@
+name: Feature request
+description: A new component, a new framework integration, or a behavior change of the plugin or the template.
+labels: ["enhancement", "status/needs-triage"]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - New component (skill, agent, MCP tool, hook, rule, command)
+        - New or changed framework integration
+        - Change to the template's generation or tooling
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: What becomes possible, and for whom, when this exists.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and references
+      description: Why now, the framework documentation this relies on, alternatives considered.
+    validations:
+      required: false
+  - type: input
+    id: spec
+    attributes:
+      label: Specification
+      description: Path of the OpenSpec change or capability spec this request extends, if one exists.
+    validations:
+      required: false
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance sketch
+      description: How we would observe that this is done. Rough is fine and non-authoritative; acceptance is written into the OpenSpec change (its proposal's Acceptance and delta specs).
+    validations:
+      required: false
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of scope
+      description: What this request deliberately does not cover.
+    validations:
+      required: false

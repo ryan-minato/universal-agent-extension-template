@@ -1,8 +1,9 @@
 #!/usr/bin/env -S deno run --allow-read --allow-run=just
-// Checks the harness itself the way CI checks code (.agents/knowledge/maintenance.md, Harness
-// checks): every repository path AGENTS.md and the knowledge base name exists, every `just <recipe>`
-// they name is a recipe, CLAUDE.md is only the import line, and the entrypoint stays within its
-// length budget. Findings name the file and the fix.
+// Checks the harness itself the way CI checks code (.agents/knowledge/maintenance.md, Two-way
+// synchronization): every repository path AGENTS.md, the knowledge base, and the project skills
+// name exists, every `just <recipe>` they name is a recipe, CLAUDE.md is only the import line, the
+// entrypoint stays within its length budget, and every Claude Code skill is a link into
+// .agents/skills/. Findings name the file and the fix.
 //
 //   scripts/validate/check_harness.ts
 import { exists, listFiles, ROOT, run } from "../lib/repo.ts";
@@ -53,20 +54,28 @@ export function referencedRecipes(text: string): string[] {
 
 const IGNORED_PATHS = new Set(["site/", "node_modules/"]);
 
+/** Documents that describe other systems' files; their paths are facts about those systems, not this tree. */
+const EXTERNAL_FACT_DOCUMENTS = new Set([".agents/knowledge/frameworks.md", ".agents/knowledge/references.md"]);
+
+/** Where a path named in a document may resolve: as written, beside the document, and in the knowledge base. */
+function candidates(doc: string, path: string): string[] {
+    const base = doc.slice(0, doc.lastIndexOf("/") + 1);
+    if (path.startsWith("./") || path.startsWith("../")) return [`${base}${path}`];
+    return [path, `${base}${path}`, `.agents/knowledge/${path}`, `.agents/knowledge/github/${path}`];
+}
+
 export async function main(root = ROOT): Promise<number> {
     const problems: string[] = [];
     const recipes = new Set((await run("just", ["--summary"], root)).trim().split(/\s+/));
     for (const doc of await harnessDocuments(root)) {
         const text = await Deno.readTextFile(`${root}/${doc}`);
-        const base = doc.slice(0, doc.lastIndexOf("/") + 1);
-        for (const path of referencedPaths(text)) {
-            if (IGNORED_PATHS.has(path)) continue;
-            const candidates = path.startsWith("./") || path.startsWith("../")
-                ? [`${base}${path}`]
-                : [path, `${base}${path}`];
+        for (const path of EXTERNAL_FACT_DOCUMENTS.has(doc) ? [] : referencedPaths(text)) {
+            if (IGNORED_PATHS.has(path) || path.includes("...")) continue;
             let found = false;
-            for (const candidate of candidates) if (await exists(`${root}/${candidate}`)) found = true;
-            if (!found) {
+            for (const candidate of candidates(doc, path)) if (await exists(`${root}/${candidate}`)) found = true;
+            // A bare file name (tasks.md, title.txt) is a generic name unless it resolves somewhere; a path with
+            // a directory in it is a claim about this tree and must resolve.
+            if (!found && path.includes("/")) {
                 problems.push(
                     `${doc} names ${JSON.stringify(path)}, which does not exist; fix the path or remove the reference`,
                 );
@@ -83,7 +92,8 @@ export async function main(root = ROOT): Promise<number> {
     const lines = (await Deno.readTextFile(`${root}/AGENTS.md`)).split("\n").length;
     if (lines > ENTRYPOINT_BUDGET) {
         problems.push(
-            `AGENTS.md has ${lines} lines, over the ${ENTRYPOINT_BUDGET}-line budget; move detail into .agents/knowledge/ and leave a pointer`,
+            `AGENTS.md has ${lines} lines, over the ${ENTRYPOINT_BUDGET}-line budget; move detail into ` +
+                ".agents/knowledge/ and leave a pointer",
         );
     }
     if ((await Deno.readTextFile(`${root}/CLAUDE.md`)) !== CLAUDE_MD) {

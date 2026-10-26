@@ -19,3 +19,8 @@ Deno.test("referencedRecipes lists the just recipes a document names", () => {
         "generate",
     ]);
 });
+
+Deno.test("the repository's own harness passes the check", async () => {
+    const { main } = await import("../../scripts/validate/check_harness.ts");
+    assertEquals(await main(), 0);
+});

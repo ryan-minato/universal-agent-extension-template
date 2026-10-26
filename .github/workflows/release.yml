@@ -1,0 +1,68 @@
+# Releases the plugin when a merge to main changed plugin.json's version: `verify` reruns the full
+# check and reads the release verdict (scripts/release/check_release.ts --main: the tag v<version>
+# does not exist and CHANGELOG.md has the section); `publish`, the only job with a write token,
+# creates the tag at the merge commit and the GitHub Release whose notes start with the CHANGELOG
+# section followed by the notes GitHub generates from PR labels (.github/release.yml). A push whose
+# version is already released does nothing. Maintainers may rerun by dispatch, on main only.
+# Release path: .agents/knowledge/github/checks.md.
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.verdict.outputs.version }}
+      release: ${{ steps.verdict.outputs.release }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-tools
+        with:
+          openspec: "true"
+          zensical: "true"
+      - run: just check
+      - id: verdict
+        run: ./scripts/release/check_release.ts --main >> "${GITHUB_OUTPUT}"
+
+  publish:
+    needs: verify
+    if: needs.verify.outputs.release == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write # create the tag and the release
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-tools
+        with:
+          just: "false"
+      - name: Write the release notes preamble from the CHANGELOG
+        env:
+          VERSION: ${{ needs.verify.outputs.version }}
+        run: ./scripts/release/changelog_section.ts "${VERSION}" > "${RUNNER_TEMP}/notes.md"
+      - name: Create the tag and the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.verify.outputs.version }}
+          SHA: ${{ github.sha }}
+        # The tag is created through the API at the exact merge commit; the release then attaches the
+        # CHANGELOG section and GitHub's generated notes for the pull requests since the previous tag.
+        run: |
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/git/refs" -f ref="refs/tags/v${VERSION}" -f sha="${SHA}"
+          gh release create "v${VERSION}" --title "v${VERSION}" --notes-file "${RUNNER_TEMP}/notes.md" --generate-notes --verify-tag

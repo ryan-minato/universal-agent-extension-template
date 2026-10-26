@@ -173,6 +173,17 @@ export function dependabotLabels(config: unknown): string[] {
     return Array.isArray(updates) ? updates.flatMap(formLabels) : [];
 }
 
+/** The labels .github/release.yml names: every category's and the exclusion's `labels`, the "*" catch-all aside. */
+export function releaseNotesLabels(config: unknown): string[] {
+    const changelog = config !== null && typeof config === "object"
+        ? (config as { changelog?: unknown }).changelog
+        : undefined;
+    if (changelog === null || typeof changelog !== "object") return [];
+    const { categories, exclude } = changelog as { categories?: unknown; exclude?: unknown };
+    const fromCategories = Array.isArray(categories) ? categories.flatMap(formLabels) : [];
+    return [...fromCategories, ...formLabels(exclude)].filter((name) => name !== "*");
+}
+
 /** One problem for each label a file names and the declaration does not hold; names compare without case. */
 export function referenceProblems(labels: Label[], references: Reference[]): string[] {
     const declared = new Set(labels.map((label) => key(label.name)));
@@ -205,6 +216,7 @@ export async function loadReferences(root: string): Promise<Reference[]> {
     }
     for (const name of entries.sort()) await read(`${forms}/${name}`, formLabels);
     await read(".github/dependabot.yml", dependabotLabels);
+    await read(".github/release.yml", releaseNotesLabels);
     return references;
 }
 

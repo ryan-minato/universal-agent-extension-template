@@ -2,7 +2,6 @@
   "lock": false,
   "fmt": {
     "exclude": [
-      ".agents/skills/openspec-*/",
       ".claude/skills/",
       "openspec/changes/archive/",
       "site/",
@@ -11,7 +10,6 @@
   },
   "lint": {
     "exclude": [
-      ".agents/skills/openspec-*/",
       ".claude/skills/",
       "site/"
     ],
