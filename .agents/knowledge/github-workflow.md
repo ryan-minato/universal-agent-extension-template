@@ -38,18 +38,18 @@ An area label states the part of the repository an issue or a pull request conce
 name, which is also the PR title scope (`git-workflow.md`). This section is the one definition; `.github/labels.yml`
 repeats each in a label's hover text (Synchronization).
 
-| Label                | Covers                                                                                                                                    |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `area:core`          | `plugin.json`, `mcp.json`, `lib/`, `skills/`, `agents/`, `integrations/README.md`, `openspec/specs/`                                      |
-| `area:codex`         | `integrations/codex/`, `.codex-plugin/`, `.codex/`                                                                                        |
-| `area:claude-code`   | `integrations/claude-code/`, `.claude-plugin/`, `.mcp.json`                                                                               |
-| `area:antigravity`   | `integrations/antigravity/`, `.antigravity-plugin/`, `rules/`, `hooks.json`, `mcp_config.json`                                            |
-| `area:pi`            | `integrations/pi/`, `package.json`                                                                                                        |
-| `area:docs`          | `docs/`, `zensical.toml`, `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CODE_OF_CONDUCT.md`               |
-| `area:ci`            | `.github/workflows/`, `.github/actions/`, `.github/dependabot.yml`                                                                        |
-| `area:scripts`       | `scripts/`, `tests/`, `justfile`, `deno.json`                                                                                             |
-| `area:spec-workflow` | `openspec/` (except specs), OpenSpec's generated skills, `.agents/knowledge/spec-workflow.md`                                             |
-| `area:harness`       | `AGENTS.md`, `CLAUDE.md`, the rest of `.agents/`, `.claude/`, `.devcontainer/`, `.github/` (forms, templates, labels), root configuration |
+| Label                | Covers                                                                                                                       |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `area:core`          | `plugin.json`, `mcp.json`, `lib/`, `skills/`, `agents/`, `integrations/README.md`, `openspec/specs/`                         |
+| `area:codex`         | `integrations/codex/`, `.codex-plugin/`, `.codex/`                                                                           |
+| `area:claude-code`   | `integrations/claude-code/`, `.claude-plugin/`, `.mcp.json`                                                                  |
+| `area:antigravity`   | `integrations/antigravity/`, `.antigravity-plugin/`, `rules/`, `hooks.json`, `mcp_config.json`                               |
+| `area:pi`            | `integrations/pi/`, `package.json`                                                                                           |
+| `area:docs`          | `docs/`, `zensical.toml`, `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CODE_OF_CONDUCT.md`  |
+| `area:ci`            | `.github/workflows/`, `.github/actions/`, `.github/dependabot.yml`                                                           |
+| `area:scripts`       | `scripts/`, `tests/`, `justfile`, `deno.json`                                                                                |
+| `area:spec-workflow` | `openspec/` (except specs), OpenSpec's generated skills, `.agents/knowledge/spec-workflow.md`                                |
+| `area:harness`       | `AGENTS.md`, the rest of `.agents/`, `.claude/`, `.devcontainer/`, `.github/` (forms, templates, labels), root configuration |
 
 A triaged issue has at least one area label. A pull request gets the area labels of the paths it changes from the PR
 labels workflow, which adds and never removes them; the map from paths to areas is `areaOf` in

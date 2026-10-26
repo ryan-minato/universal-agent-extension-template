@@ -39,10 +39,10 @@ Dependabot bump, or a regenerated file needs no change at all.
 Most changes here are written with a coding agent, and the repository is set up for it. The agent's rules live in
 `AGENTS.md` and the files it points to; you do not need to read them to contribute, because the agent does.
 
-| Agent                            | What it reads                                                                               |
-| -------------------------------- | ------------------------------------------------------------------------------------------- |
-| Codex, Antigravity, Pi, OpenCode | `AGENTS.md` and the skills in `.agents/skills/`                                             |
-| Claude Code                      | `CLAUDE.md`, which imports `AGENTS.md`, and `.claude/skills/`, links into `.agents/skills/` |
+| Agent                            | What it reads                                                                                                                                |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Codex, Antigravity, Pi, OpenCode | `AGENTS.md` and the skills in `.agents/skills/`                                                                                              |
+| Claude Code                      | `AGENTS.md` directly (no `CLAUDE.md`: the plugin validator refuses one at a plugin root) and `.claude/skills/`, links into `.agents/skills/` |
 
 You stay responsible for what you submit. Commits, pull requests, issues, and comments carry no AI or tool attribution,
 and the person who commits answers for the change.

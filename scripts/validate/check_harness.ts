@@ -1,7 +1,7 @@
 #!/usr/bin/env -S deno run --allow-read --allow-run=just
 // Checks the harness itself the way CI checks code (.agents/knowledge/maintenance.md, Two-way
 // synchronization): every repository path AGENTS.md, the knowledge base, and the project skills
-// name exists, every `just <recipe>` they name is a recipe, CLAUDE.md is only the import line, the
+// name exists, every `just <recipe>` they name is a recipe, no CLAUDE.md shadows AGENTS.md, the
 // entrypoint stays within its length budget, and every Claude Code skill is a link into
 // .agents/skills/. Findings name the file and the fix.
 //
@@ -9,7 +9,6 @@
 import { exists, listFiles, ROOT, run } from "../lib/repo.ts";
 
 export const ENTRYPOINT_BUDGET = 130;
-export const CLAUDE_MD = "@AGENTS.md\n";
 
 /** Harness documents whose references are checked. */
 export async function harnessDocuments(root: string): Promise<string[]> {
@@ -96,8 +95,12 @@ export async function main(root = ROOT): Promise<number> {
                 ".agents/knowledge/ and leave a pointer",
         );
     }
-    if ((await Deno.readTextFile(`${root}/CLAUDE.md`)) !== CLAUDE_MD) {
-        problems.push(`CLAUDE.md must contain exactly "@AGENTS.md"; rules live in AGENTS.md and the knowledge base`);
+    // Claude Code reads AGENTS.md when no CLAUDE.md exists, and its plugin validator warns about a
+    // CLAUDE.md at a plugin root (frameworks.md, Claude Code), so the entrypoint has one file.
+    if (await exists(`${root}/CLAUDE.md`)) {
+        problems.push(
+            "CLAUDE.md exists; delete it. Claude Code reads AGENTS.md directly, and the plugin validator rejects a CLAUDE.md at the plugin root",
+        );
     }
     for (const skill of await listFiles(`${root}/.claude/skills`)) {
         const info = await Deno.lstat(`${root}/.claude/skills/${skill}`);

@@ -62,8 +62,9 @@ with the new date.
 - `.mcp.json`: `{"mcpServers": {name: {command, args, env}}}` for stdio, `type: "http"|"sse"` with `url` for remote. A
   skill and a command of the same name resolve to the skill.
 - `claude plugin validate <path> [--strict]` runs offline; `claude --plugin-dir <path>` loads a plugin for one session.
-  Reads a root `AGENTS.md` when no `CLAUDE.md` exists; `@AGENTS.md` in `CLAUDE.md` imports it. `.claude/rules/*.md` with
-  a `paths` list are project rules.
+  Reads a root `AGENTS.md` when no `CLAUDE.md` exists (v2.1.277+), which is why this repository has none:
+  `claude plugin validate --strict` fails on a `CLAUDE.md` at a plugin root ("not loaded as project context", observed
+  2026-10-26). `.claude/rules/*.md` with a `paths` list are project rules.
 
 ## Antigravity (2026-10-26, antigravity.google/docs/{plugins,skills,rules,hooks,mcp,subagents}, antigravity-cli CHANGELOG)
 
