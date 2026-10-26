@@ -1,0 +1,7 @@
+# Claude Code frontmatter for agents/todo-triager.md. Read-only tool set: the shared body says the
+# agent never edits files, and this is where that becomes a restriction rather than a request.
+tools:
+  - Read
+  - Grep
+  - Glob
+model: inherit

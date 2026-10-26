@@ -1,0 +1,12 @@
+# Fields merged into the generated .codex-plugin/plugin.json (the native fallback manifest). The
+# portable root plugin.json already carries hooks under extensions["com.openai"]; this file only
+# holds the native manifest's component paths and listing interface. Public identity fields are
+# rejected here.
+skills: ./skills/
+mcpServers: ./.mcp.json
+hooks: ./integrations/codex/hooks/hooks.json
+interface:
+  displayName: TODO Tracker
+  shortDescription: Find and triage TODO/FIXME markers
+  developerName: Ryan Minato
+  category: Code quality

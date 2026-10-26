@@ -1,0 +1,10 @@
+{
+  "name": "@ryan-minato/todo-tracker",
+  "keywords": ["pi-package"],
+  "engines": { "node": ">=20" },
+  "pi": {
+    "extensions": ["./integrations/pi/extensions/index.ts"],
+    "skills": ["./skills"],
+    "prompts": ["./integrations/pi/prompts/*.md"]
+  }
+}

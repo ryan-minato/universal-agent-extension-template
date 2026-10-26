@@ -1,0 +1,29 @@
+{
+  "lock": false,
+  "fmt": {
+    "exclude": [
+      ".agents/skills/openspec-*/",
+      ".claude/skills/",
+      "openspec/changes/archive/",
+      "site/",
+      ".devcontainer/"
+    ]
+  },
+  "lint": {
+    "exclude": [
+      ".agents/skills/openspec-*/",
+      ".claude/skills/",
+      "site/"
+    ],
+    "rules": {
+      "exclude": [
+        "no-import-prefix"
+      ]
+    }
+  },
+  "exclude": [
+    "site/",
+    "node_modules/"
+  ],
+  "nodeModulesDir": "none"
+}

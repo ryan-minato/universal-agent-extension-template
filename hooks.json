@@ -1,0 +1,16 @@
+{
+  "todo-tracker": {
+    "PostToolUse": [
+      {
+        "matcher": "write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./integrations/antigravity/hooks/scripts/post-edit-todo.mjs",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
