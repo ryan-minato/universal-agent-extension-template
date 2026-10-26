@@ -11,11 +11,15 @@ import { ROOT } from "../lib/repo.ts";
 const STEPS: Record<string, { cli: string; auto: string[][]; manual: string[] }> = {
     "claude-code": {
         cli: "claude",
-        auto: [["claude", "plugin", "validate", ROOT, "--strict"]],
+        auto: [
+            ["claude", "plugin", "validate", ROOT, "--strict"],
+            ["claude", "--plugin-dir", ROOT, "plugin", "details", "todo-tracker"],
+        ],
         manual: [
-            `claude --plugin-dir ${ROOT}  # then: /help shows todo-tracker:todos; /todos runs the scan; ask for the todo-triager subagent`,
+            `claude --plugin-dir ${ROOT}  # then: /help shows todo-tracker:todos; /todos runs the scan; /agents must list todo-tracker:todo-triager (verification item 8)`,
             "In the session, edit a file to add an unowned marker; the PostToolUse hook reminder must appear.",
             "Check /mcp lists the todo-tracker server and list_todos works.",
+            `claude --plugin-dir ${ROOT} --debug=hooks,mcp  # when a hook or the server stays silent: the debug log names the failing command`,
         ],
     },
     codex: {

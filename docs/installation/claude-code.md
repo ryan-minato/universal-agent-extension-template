@@ -33,5 +33,16 @@ the adopter's marketplace lists the plugin.
 claude plugin validate /path/to/universal-agent-extension-template --strict
 ```
 
-runs offline and is part of CI (`plugin` job). `claude --plugin-dir` followed by `/help` shows the plugin's commands and
-skills; `/reload-plugins` picks up edits during development.
+runs offline and is part of CI (`plugin` job). Then, from a checkout:
+
+1. `claude --plugin-dir /path/to/checkout plugin details todo-tracker` prints the component inventory Claude Code loads
+   (skills, agents, hooks, MCP servers) and its token cost. The `--plugin-dir` flag goes before the subcommand.
+2. `claude --plugin-dir /path/to/checkout` in a project that holds a few markers: `/help` shows the plugin's commands
+   and skills, `/mcp` lists the `todo-tracker` server, `/agents` lists `todo-tracker:todo-triager`,
+   `/todo-tracker:todos` runs the scan, and editing a file so it holds an unowned `TODO:` makes the hook's reminder
+   appear in the next turn. `/reload-plugins` picks up edits during development.
+3. When a hook or the server stays silent, start with `--debug=hooks,mcp`: the log names the command that failed.
+
+`just smoke claude-code` runs steps that need no session and prints the rest. Verification item 8
+([verification items](../guides/verification-items.md)) is open: the inventory command reports no agents for the
+explicit `agents` list the manifest uses, so step 2's `/agents` check is the one that settles it.
