@@ -55,8 +55,11 @@ with the new date.
   approval, but approval policy is never"); the default `on-request` with `approvals_reviewer = "auto_review"` approves
   it in `codex exec`. `-c mcp_servers.<name>.default_tools_approval_mode` is rejected for a plugin server ("invalid
   transport") and `-c plugins."<plugin>@<marketplace>".mcp_servers.<server>.default_tools_approval_mode="auto"` did not
-  take effect from the command line; whether it works in `config.toml` is untested. Hooks and subagent delegation were
-  not exercised in the dev container (its sandbox cannot start bubblewrap): item 5.
+  take effect from the command line; whether it works in `config.toml` is untested. A role installed by
+  `install-agents.mjs --scope user` was delegated to in `codex exec` and called `mcp__todo_tracker__scan_file`
+  (2026-10-26). Plugin hooks load from the manifest path but are skipped until the user trusts the hook definition in
+  the TUI's `/hooks` (trust is recorded against the hook's hash); `codex exec` without that trust produced no hook
+  output, and `--dangerously-bypass-hook-trust` runs them for one scripted run (docs; not exercised here).
 
 ## Claude Code (2026-10-26, code.claude.com/docs/en/plugins/manifest-reference, components, hooks, sub-agents, skills, memory)
 
@@ -137,15 +140,15 @@ with the new date.
 Open questions no document answered; each needs one run on a real installation, and the result goes into the matching
 section above and into `docs/guides/verification-items.md`.
 
-| # | Framework   | Question                                                                                                                                                    | What depends on it                                                                                          |
-| - | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| 1 | Antigravity | Does a root `agents.json` with `entries: [{"path": "integrations/antigravity/agents"}]` add a second agent directory, and does it suppress the root scan?   | Whether Antigravity-specific agent overrides can be supported (`integrations/antigravity/agents/README.md`) |
-| 2 | Antigravity | What tools does a shared agent with no `tools` list receive?                                                                                                | Whether the shared `todo-triager` can read files at all                                                     |
-| 3 | Antigravity | Is a hook `command` of `./integrations/...` resolved from the plugin root? Does `${extensionPath}` resolve in `mcp_config.json`?                            | `hooks.json` and `mcp_config.json` as generated                                                             |
-| 4 | Antigravity | With both `.antigravity-plugin/plugin.json` and a root `plugin.json`, which one wins in the app and in the CLI?                                             | The manifest folder choice                                                                                  |
-| 5 | Codex       | After a marketplace or Git install, do `install-agents.mjs --scope user` roles appear in `/subagents`, and are plugin hooks honoured for that install path? | The Codex row of the support matrix                                                                         |
-| 6 | Codex       | Does the native fallback `.codex-plugin/plugin.json` ever load when `extensions["com.openai"]` is present?                                                  | Whether the fallback can be dropped                                                                         |
-| 7 | Pi          | Does the extension load under jiti with the `@sinclair/typebox` import, and does `registerMcpServer` accept the shape used?                                 | The Pi extension                                                                                            |
+| # | Framework   | Question                                                                                                                                                                                        | What depends on it                                                                                          |
+| - | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| 1 | Antigravity | Does a root `agents.json` with `entries: [{"path": "integrations/antigravity/agents"}]` add a second agent directory, and does it suppress the root scan?                                       | Whether Antigravity-specific agent overrides can be supported (`integrations/antigravity/agents/README.md`) |
+| 2 | Antigravity | What tools does a shared agent with no `tools` list receive?                                                                                                                                    | Whether the shared `todo-triager` can read files at all                                                     |
+| 3 | Antigravity | Is a hook `command` of `./integrations/...` resolved from the plugin root? Does `${extensionPath}` resolve in `mcp_config.json`?                                                                | `hooks.json` and `mcp_config.json` as generated                                                             |
+| 4 | Antigravity | With both `.antigravity-plugin/plugin.json` and a root `plugin.json`, which one wins in the app and in the CLI?                                                                                 | The manifest folder choice                                                                                  |
+| 5 | Codex       | After the plugin's hooks are trusted in `/hooks` (or with `--dangerously-bypass-hook-trust`), does the PostToolUse `systemMessage` appear after an `apply_patch` that leaves an unowned marker? | The Hooks cell of the Codex column                                                                          |
+| 6 | Codex       | Does the native fallback `.codex-plugin/plugin.json` ever load when `extensions["com.openai"]` is present?                                                                                      | Whether the fallback can be dropped                                                                         |
+| 7 | Pi          | Does the extension load under jiti with the `@sinclair/typebox` import, and does `registerMcpServer` accept the shape used?                                                                     | The Pi extension                                                                                            |
 
 ## Update this file when
 

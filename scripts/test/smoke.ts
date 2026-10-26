@@ -29,7 +29,7 @@ const STEPS: Record<string, { cli: string; auto: string[][]; manual: string[] }>
             `codex plugin marketplace add ${ROOT} && codex plugin add todo-tracker@todo-tracker && codex mcp list  # the server appears with its resolved path`,
             "New session: the skills todo-tracker:todo-scan and todo-tracker:todo-triage must be offered; list_todos must answer with root set to the project.",
             `node ${ROOT}/integrations/codex/scripts/install-agents.mjs --scope project --dry-run  # then without --dry-run; ask for the todo-triager subagent`,
-            "Edit a file to add an unowned marker; the PostToolUse hook systemMessage must appear (plugin hooks need the plugin to be trusted).",
+            "Run /hooks in the TUI and trust the todo-tracker hook, then edit a file to add an unowned marker; the PostToolUse systemMessage must appear.",
         ],
     },
     antigravity: {
