@@ -1,7 +1,7 @@
 #!/usr/bin/env -S deno run --allow-read --allow-write --allow-run=deno
 // Generates every native entry file from the sources (.agents/knowledge/architecture.md, Generated
 // files): the framework manifests, the Claude Code agents, the Codex agent roles, the MCP copies,
-// Antigravity's hooks.json and rules/, and the Pi package.json. Generated files are committed; this
+// Antigravity's hooks.json and rules/, the Codex marketplace file, and the Pi package.json. Generated files are committed; this
 // script is the only thing that writes them.
 //
 //   scripts/generate/main.ts            write what changed, delete stale generated files
@@ -9,6 +9,7 @@
 import { parseArgs } from "jsr:@std/cli@1.0.32/parse-args";
 import { dirname } from "jsr:@std/path@1.1.6";
 import { errorText, exists, formatMarkdown, listFiles, ROOT } from "../lib/repo.ts";
+import { codexMarketplace } from "./lib/marketplace.ts";
 import {
     antigravityAgentProblems,
     claudeAgent,
@@ -20,6 +21,7 @@ import {
 } from "./lib/agents.ts";
 import { loadHooks } from "./lib/hooks.ts";
 import { antigravityManifest, claudeManifest, codexManifest } from "./lib/manifests.ts";
+import { loadOverrides } from "./lib/overrides.ts";
 import { antigravityMcp, claudeMcp, loadMcp } from "./lib/mcp.ts";
 import { loadPlugin } from "./lib/plugin.ts";
 import { loadPiPatch, piPackage } from "./lib/pi.ts";
@@ -85,6 +87,10 @@ export async function generateAll(root = ROOT): Promise<Output[]> {
         outputs.push({
             path: ".codex-plugin/plugin.json",
             content: json(await codexManifest(root, plugin, planned())),
+        });
+        outputs.push({
+            path: ".agents/plugins/marketplace.json",
+            content: json(codexMarketplace(plugin, await loadOverrides(root, "codex"))),
         });
     }
 

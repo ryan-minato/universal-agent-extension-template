@@ -18,6 +18,11 @@ import { formatReport, parseArgs, scanDirectory, scanText, summarize } from "./s
 export const PROTOCOL_VERSION = "2025-06-18";
 export const SERVER_INFO = { name: "todo-tracker", version: "0.1.0" };
 
+/** Two paths name the same directory once trailing separators are dropped. */
+function samePath(a, b) {
+    return String(a).replace(/[\/\\]+$/, "") === String(b).replace(/[\/\\]+$/, "");
+}
+
 export const TOOLS = [
     {
         name: "list_todos",
@@ -26,7 +31,12 @@ export const TOOLS = [
         inputSchema: {
             type: "object",
             properties: {
-                root: { type: "string", description: "Directory to scan; defaults to the workspace root." },
+                root: {
+                    type: "string",
+                    description: "Directory to scan: pass the workspace root. Without it the server scans its own " +
+                        "working directory, and some frameworks (Codex) start the server inside the plugin " +
+                        "directory, which the server refuses.",
+                },
                 unownedOnly: { type: "boolean", description: "Only markers without an owner.", default: false },
                 limit: { type: "integer", description: "Maximum entries in the text report.", default: 200 },
             },
@@ -73,6 +83,12 @@ export function handleMessage(
             const args = params?.arguments ?? {};
             if (params?.name === "list_todos") {
                 const root = args.root ?? deps.env.TODO_TRACKER_ROOT ?? deps.cwd;
+                const pluginRoot = deps.env.PLUGIN_ROOT ?? deps.env.CLAUDE_PLUGIN_ROOT;
+                if (args.root === undefined && pluginRoot !== undefined && samePath(root, pluginRoot)) {
+                    return toolError(
+                        "list_todos needs `root`: the server's working directory is the plugin directory, not the workspace",
+                    );
+                }
                 let entries;
                 try {
                     entries = deps.scan(root);

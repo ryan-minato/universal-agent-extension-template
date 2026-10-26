@@ -33,3 +33,14 @@ Deno.test("every generated Codex role has the three required fields and the inst
         }
     }
 });
+
+Deno.test("the marketplace file names this repository as the plugin's source", async () => {
+    const marketplace = await readJson(`${ROOT}/.agents/plugins/marketplace.json`) as {
+        name: string;
+        plugins: { name: string; source: { source: string; path: string } }[];
+    };
+    const portable = await readJson(`${ROOT}/plugin.json`) as { name: string };
+    assertEquals(marketplace.name, portable.name);
+    assertEquals(marketplace.plugins.map((p) => p.name), [portable.name]);
+    assertEquals(marketplace.plugins[0].source, { source: "local", path: "./" });
+});

@@ -33,6 +33,20 @@ Deno.test("tools/list lists list_todos and tools/call scans the cwd by default",
     assertEquals(answer.result.content[0].text.split("\n")[1].startsWith("/work/a.js:1  TODO(unowned) x"), true);
 });
 
+Deno.test("list_todos refuses to scan the plugin directory by default", () => {
+    const inPlugin = { ...deps, env: { PLUGIN_ROOT: "/work/" } };
+    const refused = call(
+        { jsonrpc: "2.0", id: 9, method: "tools/call", params: { name: "list_todos", arguments: {} } },
+        inPlugin,
+    );
+    assertEquals(refused.result.isError, true);
+    const explicit = call(
+        { jsonrpc: "2.0", id: 10, method: "tools/call", params: { name: "list_todos", arguments: { root: "/proj" } } },
+        inPlugin,
+    );
+    assertEquals(explicit.result.structuredContent.entries[0].file, "/proj/a.js");
+});
+
 Deno.test("an unknown tool or method is a JSON-RPC error", () => {
     assertEquals(call({ jsonrpc: "2.0", id: 4, method: "tools/call", params: { name: "nope" } }).error.code, -32602);
     assertEquals(call({ jsonrpc: "2.0", id: 5, method: "resources/list" }).error.code, -32601);

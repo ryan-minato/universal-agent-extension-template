@@ -53,8 +53,9 @@ Install it to try the template end to end:
 ```sh
 # Claude Code: load for one session
 claude --plugin-dir /path/to/universal-agent-extension-template
-# Codex: register the repository as a marketplace, then enable todo-tracker in /plugins
+# Codex: the repository is its own marketplace
 codex plugin marketplace add https://github.com/ryan-minato/universal-agent-extension-template
+codex plugin add todo-tracker@todo-tracker
 # Antigravity
 agy plugin install https://github.com/ryan-minato/universal-agent-extension-template
 # Pi

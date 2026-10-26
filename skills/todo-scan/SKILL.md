@@ -11,10 +11,11 @@ metadata:
 
 The scan is the MCP server's job; this skill decides what to ask it and how to report. It runs no script of its own.
 
-1. Call the tool `list_todos` of the `todo-tracker` MCP server with `unownedOnly: true` and, unless the user named a
-   directory, no `root` (the server scans the workspace root). Add `root` for one directory; the server skips `.git`,
-   `node_modules`, `site`, `dist`, `build`, `coverage`, `.cache`, binary files, and files over 1 MB (format and limits
-   in [references/todo-format.md](references/todo-format.md)).
+1. Call the tool `list_todos` of the `todo-tracker` MCP server with `unownedOnly: true` and `root` set to the workspace
+   root (the directory you are working in), or to the one directory the user named; always pass `root`, because some
+   frameworks start the server inside the plugin directory. The server skips `.git`, `node_modules`, `site`, `dist`,
+   `build`, `coverage`, `.cache`, binary files, and files over 1 MB (format and limits in
+   [references/todo-format.md](references/todo-format.md)).
 2. Report the verdict verbatim: the first line of the tool's text, which is also `summary.verdict` in its structured
    result (some frameworks show only that). Then list the entries as the tool returned them,
    `file:line kind(owner)

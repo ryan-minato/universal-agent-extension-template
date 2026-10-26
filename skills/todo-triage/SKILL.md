@@ -12,8 +12,8 @@ metadata:
 Turn a list of markers into decisions, then into edits. The scan comes from the MCP server; the decisions come from the
 subagent or from you; the edits come from this skill's own script.
 
-1. Get the list: call the `todo-tracker` tool `list_todos` (no `unownedOnly`, so owned markers are classified too) and
-   keep its `structuredContent.entries`.
+1. Get the list: call the `todo-tracker` tool `list_todos` with `root` set to the workspace root (no `unownedOnly`, so
+   owned markers are classified too) and keep its `structuredContent.entries`.
 2. Classify. Where the framework offers the `todo-triager` subagent, hand it the entries; it returns one bucket per
    marker (unowned, stale, linked, open) with a proposed next step. Without a subagent, classify the same way yourself,
    reading the code around each marker.

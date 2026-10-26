@@ -40,9 +40,23 @@ with the new date.
   trusted by the user.
 - Project skills: every `.agents/skills/` from the cwd up to the repository root. `AGENTS.md` is concatenated from the
   repository root down to the cwd (32 KiB cap).
-- Install: `.agents/plugins/marketplace.json` or `~/.agents/plugins/marketplace.json`;
-  `codex plugin
-  marketplace add <source>`; plugin cache `~/.codex/plugins/cache/<marketplace>/<plugin>/<version>/`.
+- Install: a marketplace root must hold `.agents/plugins/marketplace.json` (`name`, `interface.displayName`, `plugins[]`
+  with `name`, `source: {source: "local", path}`, `policy`, `category`); `codex plugin marketplace
+  add <path|URL>`
+  then `codex plugin add <plugin>@<marketplace>`; the plugin is copied to
+  `~/.codex/plugins/cache/<marketplace>/<plugin>/<version>/` and recorded in `~/.codex/config.toml`. A plugin entry with
+  `path: "./"` makes a repository its own marketplace (observed with codex-cli 0.164.0, 2026-10-26; the generator writes
+  that file).
+- Observed with codex-cli 0.164.0 (2026-10-26): `mcp.json` is read with `${PLUGIN_ROOT}` resolved to the cache
+  directory, and the server runs with `PLUGIN_ROOT` and `PLUGIN_DATA` in its environment and the plugin directory as its
+  working directory (`codex mcp list` shows all three), so a tool that scans "the workspace" must be told the root. Tool
+  names are `mcp__<server with - as _>__<tool>` (`mcp__todo_tracker__list_todos`); plugin skills are offered as
+  `<plugin>:<skill>`. An MCP tool call asks for approval: under `approval_policy = "never"` it fails ("requires
+  approval, but approval policy is never"); the default `on-request` with `approvals_reviewer = "auto_review"` approves
+  it in `codex exec`. `-c mcp_servers.<name>.default_tools_approval_mode` is rejected for a plugin server ("invalid
+  transport") and `-c plugins."<plugin>@<marketplace>".mcp_servers.<server>.default_tools_approval_mode="auto"` did not
+  take effect from the command line; whether it works in `config.toml` is untested. Hooks and subagent delegation were
+  not exercised in the dev container (its sandbox cannot start bubblewrap): item 5.
 
 ## Claude Code (2026-10-26, code.claude.com/docs/en/plugins/manifest-reference, components, hooks, sub-agents, skills, memory)
 

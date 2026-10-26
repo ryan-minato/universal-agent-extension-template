@@ -16,6 +16,7 @@ integrations/
 .claude-plugin/             generated: plugin.json, agents/*.md
 .antigravity-plugin/        generated: plugin.json
 .codex-plugin/              generated: plugin.json (fallback)
+.agents/plugins/            generated: marketplace.json, so the repository is its own Codex marketplace
 .codex/agents/*.toml        generated: Codex roles, installed by integrations/codex/scripts/install-agents.mjs
 .mcp.json, mcp_config.json  generated: MCP for Claude Code and Antigravity
 hooks.json, rules/          generated: Antigravity hooks and rules

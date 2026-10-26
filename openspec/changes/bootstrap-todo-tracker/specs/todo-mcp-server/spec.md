@@ -24,8 +24,7 @@ notifications, and answer any other method with error `-32601`.
 
 `list_todos` SHALL accept `root`, `unownedOnly`, and `limit`, scan `root` (defaulting to `TODO_TRACKER_ROOT`, then the
 process working directory), and return the text report plus a `structuredContent.summary` whose `verdict` equals the
-text's first line, because some clients show the model only the structured content; a scan failure is a tool error, not
-a protocol error.
+text's first line; a scan failure is a tool error, not a protocol error.
 
 #### Scenario: A successful call
 
@@ -37,6 +36,16 @@ a protocol error.
 
 - **WHEN** `root` does not exist
 - **THEN** the answer is a result with `isError: true` and a message naming the failure
+
+### Requirement: The server refuses to scan the plugin directory by default
+
+When `root` is absent and the process working directory equals `PLUGIN_ROOT` or `CLAUDE_PLUGIN_ROOT`, `list_todos` SHALL
+answer a tool error asking for `root` and scan nothing, because Codex starts the server inside the plugin directory.
+
+#### Scenario: Started inside the plugin directory
+
+- **WHEN** `root` is absent and the process working directory equals `PLUGIN_ROOT`
+- **THEN** the answer is a result with `isError: true` asking for `root`, and nothing is scanned
 
 ### Requirement: The scan_file tool
 

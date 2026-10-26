@@ -6,21 +6,28 @@ fallback manifest, `.codex-plugin/plugin.json`, is generated for clients that do
 
 ## Install
 
-Register the repository as a marketplace, then enable the plugin:
+The repository is its own marketplace: the generated `.agents/plugins/marketplace.json` lists the plugin with the
+repository as its source. Add it, then install the plugin (a local checkout works with its path instead of the URL):
 
 ```sh
 codex plugin marketplace add https://github.com/ryan-minato/universal-agent-extension-template
-# in a Codex session: /plugins -> enable todo-tracker, then start a new session
+codex plugin add todo-tracker@todo-tracker
+codex plugin list | grep todo-tracker    # installed, enabled
+codex mcp list                           # the todo-tracker server with its resolved path
 ```
 
-A local checkout works the same way with its path instead of the URL.
+Codex copies the plugin into `~/.codex/plugins/cache/todo-tracker/todo-tracker/<version>/` and starts the MCP server
+there with `PLUGIN_ROOT` set and that directory as its working directory. The skills therefore always pass `root`, and a
+bare `list_todos` call from inside the plugin directory is refused rather than scanning the plugin itself. Codex asks
+for approval before an MCP tool call: with `approval_policy = "never"` (as in a scripted `codex exec`) the call fails;
+the default policy with `approvals_reviewer = "auto_review"` approves it (observed with codex-cli 0.164.0, 2026-10-26).
 
 ## What you get
 
 | Component                           | After install                                                                                                                             |
 | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Skills `todo-scan`, `todo-triage`   | Offered as `$todo-scan` and `$todo-triage`                                                                                                |
-| MCP tools `list_todos`, `scan_file` | Listed among the plugin's MCP tools (`mcp.json`, stdio, `node`); the skills call them                                                     |
+| Skills `todo-scan`, `todo-triage`   | Offered as `todo-tracker:todo-scan` and `todo-tracker:todo-triage` (`$todo-scan` in a prompt)                                             |
+| MCP tools `list_todos`, `scan_file` | `mcp__todo_tracker__list_todos` and `mcp__todo_tracker__scan_file` (`mcp.json`, stdio, `node`); the skills call them                      |
 | PostToolUse hook                    | A `systemMessage` reminder after a file write that leaves unowned markers; plugin hooks run only for a trusted, manually installed plugin |
 | Subagent `todo-triager`             | **Not registered by the plugin.** Codex plugins cannot register agent roles. Install the generated role explicitly (next section).        |
 
