@@ -3,18 +3,18 @@
 Read before committing, marking a PR ready, requesting review, archiving an OpenSpec change, approving, merging,
 releasing, or changing a repository setting, and whenever unsure whether an action is yours to take.
 
-Level: autonomous author, set by the maintainer on 2026-10-26. Once the maintainer has approved the specification, the
-agent owns preparing the PR up to review; the maintainer owns the merge, and a merge that changes `plugin.json`'s
-version is the release. Outside the scope of an approved change, the agent stops at a draft PR and the maintainer
-decides everything after it.
+Authority level: autonomous author, set by the maintainer on 2026-10-26. Once the maintainer has approved the
+specification, the agent owns preparing the PR up to review; the maintainer owns the merge, and a merge that changes
+`plugin.json`'s version is the release. Outside the scope of an approved change, the agent stops at a draft PR and the
+maintainer decides everything after it.
 
 ## What agents may do
 
 - Take issues; analyze and plan; create OpenSpec changes and open them as draft PRs.
 - After the package gate closes (Gates): write tasks, implement, run `just check`, self-review, fix findings, and push
   to the PR branch.
-- Mark the PR ready (`gh pr ready`) and request review once every task is done, `just check` passes, and the PR's
-  Validation section is filled.
+- Mark the PR ready (`gh pr ready`) and request review once the PR carries `spec:approved` (read with
+  `just pr-labels <n>`), every task is done, `just check` passes, and the PR's Validation section is filled.
 - Respond to review: answer threads, push fixes, re-request review.
 - Read any repository or remote setting; apply the label declaration only when a maintainer commands it
   (`github-workflow.md`, Labels).
@@ -46,12 +46,12 @@ whatever a tool's own defaults suggest. Human contributors' `Co-authored-by` tra
 
 ## Gates
 
-| Gate                                  | Meaning                                                                                                                                                                                                                         | Owner                                                               |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| Specification approval (package gate) | The maintainer adds `spec:approved` to the draft PR, or tells the agent to; the PR labels workflow keeps it only while the approval package is unchanged, and the agent's reconciliation of the PR's threads finds nothing open | The maintainer; never the agent for its own change                  |
-| Review Admission                      | Accepting the implementation and admitting it to formal review: marking the PR ready and requesting review                                                                                                                      | The agent, under this policy, only after the specification approval |
-| Archive command (freeze gate)         | The maintainer, after review, commands the archive in the current conversation; the archive commit is the version the final approval names                                                                                      | The maintainer                                                      |
-| Integration                           | The PR is squash-merged into `main`; when it bumps `plugin.json`'s version the Release workflow publishes it, and engineering responsibility transfers                                                                          | The maintainer                                                      |
+| Gate                                  | Meaning                                                                                                                                                                                                                                                    | Owner                                                               |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Specification approval (package gate) | The maintainer adds `spec:approved` to the draft PR, or tells the agent to; the PR labels workflow keeps it only while the approval package is unchanged. Before acting on it the agent reconciles the PR's threads and proceeds only when nothing is open | The maintainer; never the agent for its own change                  |
+| Review Admission                      | Accepting the implementation and admitting it to formal review: marking the PR ready and requesting review                                                                                                                                                 | The agent, under this policy, only after the specification approval |
+| Archive command (freeze gate)         | The maintainer, after review, commands the archive in the current conversation; the archive commit is the version the final approval names                                                                                                                 | The maintainer                                                      |
+| Integration                           | The PR is squash-merged into `main`; when it bumps `plugin.json`'s version the Release workflow publishes it, and engineering responsibility transfers                                                                                                     | The maintainer                                                      |
 
 The archive command does not carry over from another session: without one in this conversation, treat the freeze gate as
 not passed and ask. The package gate is read from the pull request.

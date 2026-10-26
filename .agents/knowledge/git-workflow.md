@@ -22,7 +22,7 @@ which is a maintainer decision recorded here first.
   Conventional Commits type, e.g. `chore/harness-bootstrap`.
 - Cut from the current `main`; merged into `main`; deleted on merge.
 - A branch finishes its outcome before merge; unfinished work stays in a draft PR. Keep the branch current with `main`
-  by rebasing or merging `main` into it; the ruleset requires an up-to-date branch before merge.
+  by rebasing or merging `main` into it; the `main` ruleset, once applied, requires an up-to-date branch before merge.
 
 ## Tags and versions
 
@@ -53,7 +53,8 @@ subject, no trailing period, at most 72 characters (`scripts/validate/check_titl
 ## Hotfix path
 
 1. Branch from the current `main` (`gh issue develop -c <bug-issue>`).
-2. Fix, bump the PATCH version in `plugin.json`, add the CHANGELOG section, open the PR.
+2. Fix through an OpenSpec change (a bug fix is a behavior-tier change, `spec-workflow.md`), bump the PATCH version in
+   `plugin.json`, add the CHANGELOG section, open the PR.
 3. Squash-merge into `main`; the Release workflow tags and publishes the new version.
 
 Recovery is roll-forward: a bad release is followed by a higher version; tags are never moved.

@@ -18,7 +18,8 @@ with the new date.
   `type` (`stdio` with a single-token `command`, `args`, `env`, `cwd`; `streamable-http` or `sse` with `url`,
   `headers`). `${PLUGIN_ROOT}` and `${PLUGIN_DATA}` expand in `args`, `env` values, and `cwd` only; the client sets both
   variables in the server's environment.
-- 1.1.0 is a working draft identical in substance to 1.0.0; no agents, hooks, commands, or rules.
+- 1.1.0 is a working draft that adds no field and no component type to 1.0.0: still no agents, hooks, commands, or
+  rules.
 
 ## Codex (2026-10-26, learn.chatgpt.com/docs/plugins, /docs/hooks, /docs/agent-configuration/subagents, openai/codex source)
 

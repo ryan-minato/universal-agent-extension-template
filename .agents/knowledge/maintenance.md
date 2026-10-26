@@ -15,7 +15,7 @@ because that is what every consumer has; it ships with the plugin, so it carries
 
 Deno entrypoints are executable scripts whose shebangs own their runtime permissions; recipes and workflows invoke them
 directly, and widening a script's capabilities means editing its shebang. Imports pin `jsr:` and `npm:` versions inline;
-the repository keeps no lock file (`deno.json`).
+the repository keeps no lock file (`deno.json` sets `lock: false`).
 
 ## Two-way synchronization
 

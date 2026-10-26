@@ -3,10 +3,10 @@
 Read before starting a change that alters what the plugin or its tooling does, before creating an issue from a
 specification, and before editing any file under `openspec/`.
 
-Level: spec-anchored. Selected because the plugin's components are a contract other people install and the template's
-generation rules are a contract adopters build on; both outlive any one change. Obligation: every merged change to
-plugin behavior leaves `openspec/specs/<capability>/spec.md` describing the behavior as merged. Approach: OpenSpec
-(schema `spec-driven`), layout and commands verified from `openspec --help` with OpenSpec 1.15.0 on 2026-10-26.
+Specification level: spec-anchored. Selected because the plugin's components are a contract other people install and the
+template's generation rules are a contract adopters build on; both outlive any one change. Obligation: every merged
+change to plugin behavior leaves `openspec/specs/<capability>/spec.md` describing the behavior as merged. Approach:
+OpenSpec (schema `spec-driven`), layout and commands verified from `openspec --help` with OpenSpec 1.15.0 on 2026-10-26.
 Re-verify a command with `openspec <command> --help` before running or documenting it. OpenSpec's generated skills
 (`.agents/skills/openspec-*`, linked from `.claude/skills/`) are the command surface; the checks below are this
 project's own.
@@ -87,8 +87,8 @@ A file under "Points to it" may summarize in one line and must link; it never re
 ## Approval gates
 
 Both gates are owned by the maintainer (the repository owner, or a collaborator with write access); the package gate
-closes on the pull request, the freeze gate in the conversation. An agent never passes a gate on a change it wrote.
-Authority levels are in `agent-authority.md`; these gates are where they attach.
+closes on the pull request, the freeze gate in the conversation. An agent never passes a gate on a change it wrote. The
+authority level is in `agent-authority.md`; these gates are where they attach.
 
 The **package gate** releases the task list and the implementation. It is exercised on the proposal, the delta specs,
 and `design.md` when warranted: always for a new component type or a new framework integration, and otherwise when more
@@ -140,14 +140,15 @@ could would be the only automation with write access to repository contents.
 
 Three tiers, decided by the files a change touches; a mixed change follows the strongest tier.
 
-| Tier     | Touches                                                                                                                                                     | Needs                                                                                                       |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Behavior | `plugin.json`, `mcp.json`, `lib/`, `skills/`, `agents/`, `integrations/`, `scripts/generate/`, `scripts/validate/`, `tests/`, or a generated file's content | A change with proposal, delta specs, design when warranted, tasks                                           |
-| Harness  | `AGENTS.md`, `.agents/`, `.github/`, `scripts/` outside generate and validate, `justfile`, `deno.json`, `docs/`, `openspec/config.yaml`, root documents     | A change with `skip_specs: true` in `.openspec.yaml`: proposal, design when warranted, tasks, no delta spec |
-| Exempt   | Spelling and formatting only, a Dependabot bump, regenerated files with no source change, `README.md` wording                                               | No change; the PR says which exemption applies                                                              |
+| Tier     | Touches                                                                                                                                                           | Needs                                                                                                       |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Behavior | `plugin.json`, `mcp.json`, `lib/`, `skills/`, `agents/`, `integrations/`, `scripts/generate/`, `scripts/validate/`, `tests/`, or a generated file's content       | A change with proposal, delta specs, design when warranted, tasks                                           |
+| Harness  | `AGENTS.md`, `.agents/`, `.github/`, `scripts/` outside generate and validate, `justfile`, `deno.json`, `docs/`, `openspec/config.yaml`, root documents           | A change with `skip_specs: true` in `.openspec.yaml`: proposal, design when warranted, tasks, no delta spec |
+| Exempt   | Spelling and formatting only, a Dependabot bump, regenerated files with no source change, wording in `README.md` or another human-reader page that states no rule | No change; the PR says which exemption applies                                                              |
 
-Main specs change only through archived changes; a change that removes a capability corrects the spec's Purpose in the
-same PR, named in its proposal and committed with the approval package.
+The package gate applies to every tier that carries a change: a harness change's approval package is its proposal and
+its design when warranted. Main specs change only through archived changes; a change that removes a capability corrects
+the spec's Purpose in the same PR, named in its proposal and committed with the approval package.
 
 ## Initial bootstrap
 

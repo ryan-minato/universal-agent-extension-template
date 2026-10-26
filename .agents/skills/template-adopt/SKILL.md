@@ -24,6 +24,8 @@ description; they are the acceptance of this adoption.
 
 ## 2. Rename
 
+Skip any file step 3 will delete (for example the Pi patch or the Codex installer when that framework goes).
+
 1. `plugin.json`: `name`, `description`, `author`, `homepage`, `repository`, `keywords`; keep `version` at `0.1.0` for
    the first release.
 2. `integrations/pi/package.patch.json`: the scoped npm `name`.
@@ -74,8 +76,8 @@ OpenSpec change (`.agents/knowledge/spec-workflow.md`); the adoption itself is a
 - `README.md`, `CONTRIBUTING.md`: the new plugin's name, purpose, and install lines.
 - `.agents/knowledge/frameworks.md`: keep the sections of the kept frameworks; re-read each source and refresh the dates
   if more than a few months passed.
-- Remote settings: apply the rows of `.agents/knowledge/github/platform-settings.md` to the new repository and record
-  the dates.
+- Remote settings: the adopter (a human, never the agent) applies the rows of
+  `.agents/knowledge/github/platform-settings.md` to the new repository and records the dates.
 
 Check: `just check`, `scripts/adopt_checklist.ts` empty, `claude plugin validate . --strict` green where the Claude Code
 CLI exists, and this skill's own text reviewed: delete the sample-specific sentences (step 3's list of sample files)
