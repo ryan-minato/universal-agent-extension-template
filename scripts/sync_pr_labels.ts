@@ -26,7 +26,7 @@
 // request is checked out or run. A value a pull request controls reaches `gh api` only in a request
 // body or percent-encoded in a path, and is printed only escaped. The script imports one constant
 // from a module without imports and nothing remote, so no dependency runs under the job's token;
-// Deno would confine one no further than the script itself (.agents/knowledge/review-guidance.md).
+// Deno would confine one no further than the script itself (.agents/knowledge/github/checks.md, Rules).
 import { REPO } from "./lib/constants.ts";
 
 export const PENDING = "spec:pending";

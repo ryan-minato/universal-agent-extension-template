@@ -4,8 +4,8 @@
 // commands the archive and it is committed (.agents/knowledge/spec-workflow.md). Also usable
 // locally to list active changes.
 //
-//   scripts/check_spec_archived.ts            list active changes; exits 0 whether or not one exists
-//   scripts/check_spec_archived.ts --ready    exit 0 when none is unarchived, 1 when one is
+//   scripts/validate/check_spec_archived.ts            list active changes; exits 0 whether or not one exists
+//   scripts/validate/check_spec_archived.ts --ready    exit 0 when none is unarchived, 1 when one is
 //
 // The PR workflow reads the exit status of --ready, so an error this script catches exits with
 // FAILED in either form, never with 1. A script Deno cannot load still exits 1; the workflow loads

@@ -2,7 +2,7 @@
 // Checks a pull request title — the squash commit title on main — against the convention in
 // .agents/knowledge/git-workflow.md: `<type>(<scope>)[!]: <subject>`.
 //
-//   [PR_AUTHOR=<login>] scripts/check_title.ts "feat(node): add pnpm option"
+//   [PR_AUTHOR=<login>] scripts/validate/check_title.ts "feat(codex): add the agent-role installer"
 //
 // For Dependabot's pull requests the length limit ignores the " in /<directory>" suffix it appends
 // to updates outside the repository root, which no configuration can shorten.
@@ -20,8 +20,8 @@ export function titleProblems(title: string, author = ""): string[] {
     const match = PATTERN.exec(title);
     if (!match?.groups) {
         return [
-            "Title must look like `<type>(<scope>): <subject>` — e.g. `feat(node): add pnpm option` " +
-            "or `ci: cache the devcontainer CLI`. Scope is the feature id for a feature change.",
+            "Title must look like `<type>(<scope>): <subject>` — e.g. `feat(codex): add the agent-role installer` " +
+            "or `ci: pin the release workflow actions`. Scope is an area name (.agents/knowledge/git-workflow.md).",
         ];
     }
     const { type, subject } = match.groups;

@@ -5,7 +5,7 @@
 // CI passes the base commit's copy (.github/workflows/pr.yml) so a pull request cannot relax the check
 // by editing the template.
 //
-//   scripts/check_pr_body.ts --template .github/pull_request_template.md [--body-file body.md]
+//   scripts/validate/check_pr_body.ts --template .github/pull_request_template.md [--body-file body.md]
 //
 // Without --body-file the body comes from the pull_request event payload ($GITHUB_EVENT_PATH).
 import { parseArgs } from "jsr:@std/cli@1.0.32/parse-args";

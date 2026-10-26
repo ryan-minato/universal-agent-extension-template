@@ -6,7 +6,7 @@
 #
 # This is the one workflow on pull_request_target (.agents/knowledge/github/checks.md, Rules): it
 # runs main's copy of this file and of the script with a token that can label a pull request from a
-# fork. It is safe only within these bounds, which scripts/checks_test.ts asserts on this file. It
+# fork. It is safe only within these bounds, which tests/unit/workflows_test.ts asserts on this file. It
 # never checks out, fetches, or runs anything of the pull request; what the pull request controls
 # reaches the script as environment variables, never as an expression in a run: line; the job alone
 # holds contents: read and pull-requests: write; the token is set on the two steps that call gh and
