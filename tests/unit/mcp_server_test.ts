@@ -29,6 +29,7 @@ Deno.test("tools/list lists list_todos and tools/call scans the cwd by default",
     assertEquals(call({ jsonrpc: "2.0", id: 2, method: "tools/list" }).result.tools, TOOLS);
     const answer = call({ jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "list_todos", arguments: {} } });
     assertEquals(answer.result.structuredContent.summary.unowned, 1);
+    assertEquals(answer.result.structuredContent.summary.verdict, answer.result.content[0].text.split("\n")[0]);
     assertEquals(answer.result.content[0].text.split("\n")[1].startsWith("/work/a.js:1  TODO(unowned) x"), true);
 });
 

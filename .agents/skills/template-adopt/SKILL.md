@@ -32,7 +32,8 @@ Skip any file step 3 will delete (for example the Pi patch or the Codex installe
 3. `scripts/lib/constants.ts`: `REPO`.
 4. The marker string `generated-by: todo-tracker` in `scripts/generate/lib/agents.ts` and
    `integrations/codex/scripts/install-agents.mjs` (both must agree; the installer refuses files without it).
-5. `mcp/todo-tracker/server.mjs`: `SERVER_INFO`; `mcp.json`: the server key; the directory name under `mcp/`.
+5. `mcp/todo-tracker/server.mjs`: `SERVER_INFO`; `mcp.json`: the server key; the directory name under `mcp/`; the
+   `mcp__plugin_<plugin>_<server>__*` entry in `integrations/claude-code/agents/*.override.yaml`.
 6. `zensical.toml`: `site_name`, `site_url`, `repo_url`.
 7. `.github/CODEOWNERS`, `.github/ISSUE_TEMPLATE/config.yml`, `SECURITY.md`, `SUPPORT.md`: the owner and the repository
    URL.

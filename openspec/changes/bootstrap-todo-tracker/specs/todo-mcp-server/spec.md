@@ -23,13 +23,15 @@ notifications, and answer any other method with error `-32601`.
 ### Requirement: The list_todos tool
 
 `list_todos` SHALL accept `root`, `unownedOnly`, and `limit`, scan `root` (defaulting to `TODO_TRACKER_ROOT`, then the
-process working directory), and return the text report plus a `structuredContent.summary`; a scan failure is a tool
-error, not a protocol error.
+process working directory), and return the text report plus a `structuredContent.summary` whose `verdict` equals the
+text's first line, because some clients show the model only the structured content; a scan failure is a tool error, not
+a protocol error.
 
 #### Scenario: A successful call
 
 - **WHEN** `tools/call` names `list_todos` with `unownedOnly: true`
-- **THEN** the text content starts with the verdict line and lists only unowned markers
+- **THEN** the text content starts with the verdict line, `structuredContent.summary.verdict` equals it, and only
+  unowned markers are listed
 
 #### Scenario: An unreadable root
 

@@ -19,13 +19,13 @@ the adopter's marketplace lists the plugin.
 
 ## What you get
 
-| Component                           | After install                                                                                                |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Skills `todo-scan`, `todo-triage`   | `/todo-tracker:todo-scan`, `/todo-tracker:todo-triage`                                                       |
-| Command `/todo-tracker:todos`       | Asks for `list_todos` with `unownedOnly`; kept as an example of the command mechanism (skills are preferred) |
-| Subagent `todo-triager`             | Available to the Agent tool with the read-only tool list from its override (`Read`, `Grep`, `Glob`)          |
-| MCP tools `list_todos`, `scan_file` | `/mcp` lists the `todo-tracker` server                                                                       |
-| PostToolUse hook                    | After `Write`, `Edit`, or `MultiEdit`, unowned markers in the edited file come back as additional context    |
+| Component                           | After install                                                                                                                 |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Skills `todo-scan`, `todo-triage`   | `/todo-tracker:todo-scan`, `/todo-tracker:todo-triage`                                                                        |
+| Command `/todo-tracker:todos`       | Asks for `list_todos` with `unownedOnly`; kept as an example of the command mechanism (skills are preferred)                  |
+| Subagent `todo-triager`             | `todo-tracker:todo-triager` for the Agent tool, with the override's tools: `Read`, `Grep`, `Glob`, and the plugin's MCP tools |
+| MCP tools `list_todos`, `scan_file` | `/mcp` lists the `todo-tracker` server                                                                                        |
+| PostToolUse hook                    | After `Write`, `Edit`, or `MultiEdit`, unowned markers in the edited file come back as additional context                     |
 
 ## Validate
 
@@ -43,6 +43,6 @@ runs offline and is part of CI (`plugin` job). Then, from a checkout:
    appear in the next turn. `/reload-plugins` picks up edits during development.
 3. When a hook or the server stays silent, start with `--debug=hooks,mcp`: the log names the command that failed.
 
-`just smoke claude-code` runs steps that need no session and prints the rest. Verification item 8
-([verification items](../guides/verification-items.md)) is open: the inventory command reports no agents for the
-explicit `agents` list the manifest uses, so step 2's `/agents` check is the one that settles it.
+`just smoke claude-code` runs steps that need no session and prints the rest. The inventory command reports `Agents (0)`
+for the explicit `agents` list the manifest uses while the session loads the agent (observed with CLI 2.1.310);
+`/agents` is the check that counts.

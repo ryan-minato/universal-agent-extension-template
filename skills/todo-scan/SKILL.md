@@ -15,8 +15,10 @@ The scan is the MCP server's job; this skill decides what to ask it and how to r
    directory, no `root` (the server scans the workspace root). Add `root` for one directory; the server skips `.git`,
    `node_modules`, `site`, `dist`, `build`, `coverage`, `.cache`, binary files, and files over 1 MB (format and limits
    in [references/todo-format.md](references/todo-format.md)).
-2. Report the first line of the tool's text verbatim: it is the verdict (`N marker(s): … ; U unowned, L linked`). Then
-   list the entries as the tool printed them.
+2. Report the verdict verbatim: the first line of the tool's text, which is also `summary.verdict` in its structured
+   result (some frameworks show only that). Then list the entries as the tool returned them,
+   `file:line kind(owner)
+   text`.
 3. For each unowned marker, either add the owner (`TODO(<owner>): <text>`) when the request was to fix them, confirming
    the edit with `scan_file` on that file, or hand the list to the `todo-triage` skill when the request was to decide
    what to do.

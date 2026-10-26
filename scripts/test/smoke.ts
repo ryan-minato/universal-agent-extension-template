@@ -16,7 +16,7 @@ const STEPS: Record<string, { cli: string; auto: string[][]; manual: string[] }>
             ["claude", "--plugin-dir", ROOT, "plugin", "details", "todo-tracker"],
         ],
         manual: [
-            `claude --plugin-dir ${ROOT}  # then: /help shows todo-tracker:todos; /todos runs the scan; /agents must list todo-tracker:todo-triager (verification item 8)`,
+            `claude --plugin-dir ${ROOT}  # then: /help shows todo-tracker:todos; /todos runs the scan; /agents must list todo-tracker:todo-triager`,
             "In the session, edit a file to add an unowned marker; the PostToolUse hook reminder must appear.",
             "Check /mcp lists the todo-tracker server and list_todos works.",
             `claude --plugin-dir ${ROOT} --debug=hooks,mcp  # when a hook or the server stays silent: the debug log names the failing command`,

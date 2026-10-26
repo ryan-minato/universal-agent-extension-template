@@ -95,8 +95,8 @@ export function scanDirectory(root, options = {}) {
 }
 
 /**
- * Counts by kind, by owner, and the unowned total.
- * @param {ReturnType<typeof scanText>} entries
+ * Counts per kind and owner, plus the one-line verdict. The verdict is in the structured result too, because some
+ * clients (Claude Code) show the model only the structured content of a tool result.
  */
 export function summarize(entries) {
     const byKind = { todo: 0, fixme: 0 };
@@ -109,7 +109,9 @@ export function summarize(entries) {
         else byOwner[entry.owner] = (byOwner[entry.owner] ?? 0) + 1;
         if (entry.issue !== null) linked++;
     }
-    return { total: entries.length, byKind, byOwner, unowned, linked };
+    const verdict = `${entries.length} marker(s): ${byKind.todo} TODO, ${byKind.fixme} FIXME; ` +
+        `${unowned} unowned, ${linked} linked to an issue.`;
+    return { total: entries.length, byKind, byOwner, unowned, linked, verdict };
 }
 
 /**
@@ -123,10 +125,7 @@ export function formatReport(entries, options = {}) {
         0,
         options.limit ?? 200,
     );
-    const lines = [
-        `${summary.total} marker(s): ${summary.byKind.todo} TODO, ${summary.byKind.fixme} FIXME; ` +
-        `${summary.unowned} unowned, ${summary.linked} linked to an issue.`,
-    ];
+    const lines = [summary.verdict];
     for (const entry of shown) {
         const who = entry.owner === null ? "unowned" : entry.owner;
         const ref = entry.issue === null ? "" : ` #${entry.issue}`;

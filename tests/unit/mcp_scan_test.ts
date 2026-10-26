@@ -40,6 +40,7 @@ Deno.test("scanDirectory skips excluded directories and binary files", () => {
         byOwner: { alice: 1, bob: 1 },
         unowned: 2,
         linked: 1,
+        verdict: "4 marker(s): 3 TODO, 1 FIXME; 2 unowned, 1 linked to an issue.",
     });
 });
 
