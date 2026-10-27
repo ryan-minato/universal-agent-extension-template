@@ -33,6 +33,15 @@ with the new date.
   `.codex-plugin/plugin.json`. So this template's Codex hook is declared where the documentation says and does not load
   on that version (verification item 5). The probe: `codex app-server` on stdio, `initialize` then `hooks/list` with
   `{"cwds": ["<dir>"]}`.
+- Hook handler facts (learn.chatgpt.com/docs/hooks, read 2026-10-27): `timeout` is in seconds (default 600);
+  `statusMessage`, `async: true` (output delivered at the next safe point; cannot block), and `additionalContextLimit`
+  (about 2,500 tokens by default, larger output is spilled to a file) are per handler; hook commands run with the
+  session's `cwd` as working directory. Besides `command`, a handler can be
+  `{"type": "mcp_tool", "server", "tool", "input"}` calling an already-connected MCP server with `${field.path}`
+  templates from the event (`"patch": "${tool_input.command}"`), same trust review and output contract as a command
+  hook; a missing server or tool never blocks. `matcher` for `apply_patch` also accepts `Edit` and `Write`; the
+  plugin-hook section names only the default `hooks/hooks.json` and the `.codex-plugin/plugin.json` `hooks` entry as
+  sources, and project `.codex/` hooks (and `.codex/agents`) load only for a trusted project.
 - Native manifest fields: `name`, `version`, `description`, `author`, `homepage`, `repository`, `license`, `keywords`,
   `skills` (path), `mcpServers` (path), `apps`, `hooks`, `interface`.
 - Plugins do not register agents: the manifest struct has no `agents` field (codex-rs `core-plugins/src/manifest.rs`);

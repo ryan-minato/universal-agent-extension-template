@@ -41,7 +41,9 @@ output as separate requirements.
   when later steps tempt the agent to rush the current one and the split lands across a real context boundary such as a
   subagent hand-off (by sequence). Each split adds a description that loads on every turn; it must earn that.
 - **A hook is minimal.** It detects, decides whether to speak, and points at the tool or skill that holds the authority;
-  silence is its normal output. A hook that computes an answer duplicates a tool.
+  silence is its normal output. A hook that computes an answer duplicates a tool. Where a framework lets a hook call an
+  MCP tool directly (Codex's `mcp_tool` handler, `frameworks.md`), prefer that over a script: the hook is then only the
+  event binding and the server stays the one implementation.
 - **A format two components must know** (the marker syntax a tool parses and a hook detects) is defined once in a
   reference file and each implementation is held to the same test fixture; the code stays separate.
 - **A subagent narrows, it does not own.** It receives the tool's data or calls the tool itself; it returns decisions in
