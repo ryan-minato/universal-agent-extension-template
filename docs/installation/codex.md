@@ -24,12 +24,12 @@ the default policy with `approvals_reviewer = "auto_review"` approves it (observ
 
 ## What you get
 
-| Component                           | After install                                                                                                                                                                                                          |
-| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Skills `todo-scan`, `todo-triage`   | Offered as `todo-tracker:todo-scan` and `todo-tracker:todo-triage` (`$todo-scan` in a prompt)                                                                                                                          |
-| MCP tools `list_todos`, `scan_file` | `mcp__todo_tracker__list_todos` and `mcp__todo_tracker__scan_file` (`mcp.json`, stdio, `node`); the skills call them                                                                                                   |
-| PostToolUse hook                    | A reminder after an `apply_patch` that leaves unowned markers, as developer context for the model and a UI warning; runs only after you trust the hook in the TUI's `/hooks` (installing the plugin does not trust it) |
-| Subagent `todo-triager`             | **Not registered by the plugin.** Codex plugins cannot register agent roles. Install the generated role explicitly (next section).                                                                                     |
+| Component                           | After install                                                                                                                                                                                                                                                                                                                      |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Skills `todo-scan`, `todo-triage`   | Offered as `todo-tracker:todo-scan` and `todo-tracker:todo-triage` (`$todo-scan` in a prompt)                                                                                                                                                                                                                                      |
+| MCP tools `list_todos`, `scan_file` | `mcp__todo_tracker__list_todos` and `mcp__todo_tracker__scan_file` (`mcp.json`, stdio, `node`); the skills call them                                                                                                                                                                                                               |
+| PostToolUse hook                    | A reminder after an `apply_patch` that leaves unowned markers, as developer context for the model and a UI warning. **Not loaded by codex-cli 0.164.0**: that version discovers plugin hooks only for packages without a root `plugin.json` (Known limits). Once discovered, it runs only after you trust it in the TUI's `/hooks` |
+| Subagent `todo-triager`             | **Not registered by the plugin.** Codex plugins cannot register agent roles. Install the generated role explicitly (next section).                                                                                                                                                                                                 |
 
 ## Install the subagent
 
@@ -60,6 +60,9 @@ config_file = "/absolute/path/to/plugin/.codex/agents/todo-triager.toml"
 
 - The role's `features.shell_tool = false` switches off the shell tool; it is not a sandbox. The parent session's
   sandbox and approval policy still apply.
-- Whether the trusted hook's `systemMessage` appears after `apply_patch`, and whether the fallback manifest ever loads
-  when the portable one is present, are open [verification items](../guides/verification-items.md). A scripted run can
-  use `codex exec --dangerously-bypass-hook-trust` to exercise the hook without persisting trust.
+- codex-cli 0.164.0 discovers no plugin hooks for a package that has a root `plugin.json` (checked with the app server's
+  `hooks/list`: the same hooks file is found only in a legacy package with `.codex-plugin/plugin.json` alone). The hook
+  stays declared where the documentation puts it; re-test on newer versions
+  ([verification items](../guides/verification-items.md), item 5). Once discovered, trust it in `/hooks`, or use
+  `codex exec --dangerously-bypass-hook-trust` for one scripted run. Whether the fallback manifest ever loads when the
+  portable one is present is item 6.
