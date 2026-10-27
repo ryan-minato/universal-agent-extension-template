@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "todo-tracker": {
+      "command": "node",
+      "args": [
+        "${extensionPath}/mcp/todo-tracker/server.mjs"
+      ]
+    }
+  }
+}

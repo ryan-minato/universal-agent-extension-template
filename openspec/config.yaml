@@ -1,0 +1,44 @@
+schema: spec-driven
+
+# Injected by OpenSpec into every artifact's instructions. It points to the knowledge base rather
+# than restating it; the specification contract is .agents/knowledge/spec-workflow.md.
+context: |
+  This repository is a template for one cross-framework coding-agent plugin (sample: todo-tracker),
+  built on Agent Plugins 1.0 with per-framework integrations under integrations/<framework>/ and
+  generated native entry files. One OpenSpec capability per delivered behavior, named for what it
+  delivers (see "Capabilities" in .agents/knowledge/spec-workflow.md). A change to the harness,
+  scripts, CI, or documents sets `skip_specs: true` and carries no delta spec. Before writing an
+  artifact, read .agents/knowledge/architecture.md (component sources, discovery rules, conversion
+  rule) and .agents/knowledge/frameworks.md (verified framework facts and open verification items).
+  Write every artifact in English.
+
+rules:
+  proposal:
+    - Describe the end state, not the approach; the roles of proposal, specs, design, and tasks are in the "Artifact roles" section of .agents/knowledge/spec-workflow.md.
+    - Name the capabilities whose contracts change and the support-matrix rows the change moves; never restate a requirement or scenario.
+    - End with "## Acceptance" holding two lists of checkable items, "Becomes true" and "Stays true"; for plugin behavior, point to the delta specs' scenarios.
+    - Link the GitHub issue the change implements.
+  specs:
+    - One capability per delivered behavior; a scenario describes what a framework or a user observes, never the diff that produces it.
+    - A delta spec holds only `## Purpose` (new capabilities only) and ADDED, MODIFIED, REMOVED, or RENAMED Requirements sections.
+    - When a framework cannot express a behavior, state that as a requirement with the framework named, so the support matrix and the spec agree.
+    - Refer to .agents/knowledge/frameworks.md for framework facts; never copy a framework's field list into a spec.
+  design:
+    - Describe how the end state is reached; never restate its goal or acceptance.
+    - Write one for every new component type or framework integration, and for any change to the generator's conversion rules or a manifest format.
+    - Record the framework facts the approach relies on (with their dates from frameworks.md), the rejected alternatives, and any verification item the change leaves open.
+    - State bounds, not steps. Never include secrets, credentials, or private data.
+  tasks:
+    - Write tasks.md only after the change's pull request carries `spec:approved`, the maintainer's approval of the approval package, read with `just pr-labels <n>` as .agents/knowledge/spec-workflow.md says. Without it, do not create this file; stop and report that the approval package is ready for review.
+    - Cover the source files, `just generate`, the compatibility tests, the installation page, the support matrix row, and the CHANGELOG entry.
+    - End with running `just check` and recording the results in the PR's Validation section.
+    - Never add a task to archive or sync; that happens only on a maintainer's command.
+
+operations:
+  apply:
+    guidance:
+      - Implement only while the change's pull request carries `spec:approved`, read with `just pr-labels <n>`; otherwise stop and ask.
+      - When every task is done, do not suggest or run archive or sync; follow the Finish steps of the github-project-workflow skill.
+  archive:
+    guidance:
+      - Archive or sync only when a maintainer explicitly commanded it in the current conversation; otherwise stop and ask.

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ask a question or share an idea
+    url: https://github.com/ryan-minato/universal-agent-extension-template/discussions
+    about: Questions and ideas go to Discussions; issues are for actionable work.
+  - name: Report a security vulnerability
+    url: https://github.com/ryan-minato/universal-agent-extension-template/security/advisories/new
+    about: Never report vulnerabilities through public issues.

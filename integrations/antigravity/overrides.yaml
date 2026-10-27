@@ -1,0 +1,7 @@
+# Fields merged into the generated .antigravity-plugin/plugin.json. Public identity fields are
+# rejected here; `name`, `description`, `version`, `author`, `license`, `homepage`, `repository`,
+# and `keywords` come from plugin.json.
+displayName: TODO Tracker
+suggestedPrompts:
+  - Scan this workspace for unowned TODO markers
+  - Triage the TODO and FIXME markers in src/

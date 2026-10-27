@@ -1,0 +1,20 @@
+{
+  "name": "todo-tracker",
+  "interface": {
+    "displayName": "TODO Tracker"
+  },
+  "plugins": [
+    {
+      "name": "todo-tracker",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Code quality"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# Fields merged into the generated .claude-plugin/plugin.json. Public identity fields live in
+# plugin.json and are rejected here. Paths start with ./ and stay inside the plugin root.
+commands: ./integrations/claude-code/commands
+hooks: ./integrations/claude-code/hooks/hooks.json

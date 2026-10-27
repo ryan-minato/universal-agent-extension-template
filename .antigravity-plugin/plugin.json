@@ -1,0 +1,25 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "todo-tracker",
+  "version": "0.1.0",
+  "description": "Finds TODO and FIXME markers, reports the unowned ones, and helps triage them across Codex, Claude Code, Antigravity, and Pi.",
+  "author": {
+    "name": "Ryan Minato",
+    "url": "https://github.com/ryan-minato"
+  },
+  "homepage": "https://ryan-minato.github.io/universal-agent-extension-template/",
+  "repository": "https://github.com/ryan-minato/universal-agent-extension-template",
+  "license": "Apache-2.0",
+  "keywords": [
+    "todo",
+    "fixme",
+    "code-quality",
+    "agent-plugin",
+    "template"
+  ],
+  "displayName": "TODO Tracker",
+  "suggestedPrompts": [
+    "Scan this workspace for unowned TODO markers",
+    "Triage the TODO and FIXME markers in src/"
+  ]
+}

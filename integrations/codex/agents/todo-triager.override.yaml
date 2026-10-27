@@ -1,0 +1,6 @@
+# Codex TOML fields for agents/todo-triager.md. The shared body says the agent never edits files;
+# turning off the shell tool is the closest Codex offers. It is a feature switch, not a sandbox:
+# the parent session's sandbox and approval policy still apply.
+model_reasoning_effort: medium
+features:
+  shell_tool: false

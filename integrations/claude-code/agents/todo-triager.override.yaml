@@ -1,0 +1,10 @@
+# Claude Code frontmatter for agents/todo-triager.md. Read-only tool set: the shared body says the
+# agent never edits files, and this is where that becomes a restriction rather than a request. A
+# `tools` list withholds every MCP tool it does not name, so the plugin's server is granted whole:
+# Claude Code names a plugin server `plugin_<plugin>_<server>` (frameworks.md, Claude Code).
+tools:
+  - Read
+  - Grep
+  - Glob
+  - mcp__plugin_todo-tracker_todo-tracker__*
+model: inherit

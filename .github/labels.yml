@@ -1,0 +1,84 @@
+# The repository's labels, all of them: scripts/sync_labels.ts makes the repository match this list,
+# and `just labels --check` validates it offline. The area labels are defined in
+# .agents/knowledge/github-workflow.md (Areas); a description here is GitHub's hover text, at most
+# 100 characters. The spec: labels state where a pull request's specification stands; the PR labels
+# workflow sets them. The type and status labels are set by the issue forms. GitHub's default labels
+# are declared so the sync keeps them. Colors are quoted: an unquoted one may be read as a number.
+- name: area:core
+  color: "1d76db"
+  description: plugin.json, mcp.json, mcp/, skills/, agents/, and the capability specs
+- name: area:codex
+  color: "0e8a16"
+  description: integrations/codex/, .codex-plugin/, .codex/
+- name: area:claude-code
+  color: "d4a017"
+  description: integrations/claude-code/, .claude-plugin/, .mcp.json
+- name: area:antigravity
+  color: "5319e7"
+  description: integrations/antigravity/, .antigravity-plugin/, rules/, hooks.json, mcp_config.json
+- name: area:pi
+  color: "c2185b"
+  description: integrations/pi/ and package.json
+- name: area:docs
+  color: "0075ca"
+  description: docs/, zensical.toml, README, CHANGELOG, CONTRIBUTING, SECURITY, SUPPORT, CODE_OF_CONDUCT
+- name: area:ci
+  color: "fbca04"
+  description: The workflows, the composite actions, and Dependabot
+- name: area:scripts
+  color: "d93f0b"
+  description: scripts/, tests/, the justfile, and deno.json
+- name: area:spec-workflow
+  color: "d876e3"
+  description: The OpenSpec process, its configuration, and its generated skills
+- name: area:harness
+  color: "6e7781"
+  description: AGENTS.md, the knowledge base, project skills, templates and forms, dev container, root config
+- name: spec:pending
+  color: "fef2c0"
+  description: The pull request holds an OpenSpec change whose approval package is not approved
+- name: spec:approved
+  color: "0e8a16"
+  description: The maintainer approved the approval package at the commit the workflow's comment names
+- name: spec:archived
+  color: "c5def5"
+  description: The pull request archives its OpenSpec change and holds no unarchived one
+- name: task
+  color: "cfd3d7"
+  description: Planned work that is neither a bug nor an enhancement
+- name: status/needs-triage
+  color: "ededed"
+  description: Arrived from a form; waits for an area label and a decision
+- name: status/blocked
+  color: "b60205"
+  description: Cannot proceed until another issue or an external decision is resolved
+- name: goal
+  color: "3e4b9e"
+  description: A tracking issue holding a long-horizon goal and its sub-issues
+- name: bug
+  color: "d73a4a"
+  description: Something isn't working
+- name: documentation
+  color: "0075ca"
+  description: Improvements or additions to documentation
+- name: duplicate
+  color: "cfd3d7"
+  description: This issue or pull request already exists
+- name: enhancement
+  color: "a2eeef"
+  description: New feature or request
+- name: good first issue
+  color: "7057ff"
+  description: Good for newcomers
+- name: help wanted
+  color: "008672"
+  description: Extra attention is needed
+- name: invalid
+  color: "e4e669"
+  description: This doesn't seem right
+- name: question
+  color: "d876e3"
+  description: Further information is requested
+- name: wontfix
+  color: "ffffff"
+  description: This will not be worked on

@@ -1,0 +1,106 @@
+# CI for pull requests and main: the recipes of `just check`, one job each, so a red job names what
+# failed. `ci-gate` is the single required CI check; job map: .agents/knowledge/github/checks.md.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-tools
+      - run: just lint
+
+  scripts:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-tools
+      - run: just scripts-check
+
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-tools
+      - run: just test
+
+  plugin:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-tools
+      - run: just generate-check
+      - run: just validate
+      # Claude Code's own validator, offline. The npm package is pinned; the step installs it into the runner only.
+      - name: Validate with the Claude Code CLI
+        run: |
+          npm install --global @anthropic-ai/claude-code@2.1.310
+          claude plugin validate . --strict
+
+  spec:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-tools
+        with:
+          openspec: "true"
+      - run: just spec-check
+
+  harness:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-tools
+      - run: just harness-check
+
+  release-check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-tools
+      - env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: just release-check --pr "${BASE}"
+
+  ci-gate:
+    if: always()
+    needs: [lint, scripts, test, plugin, spec, harness, release-check]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fail when any job failed or was cancelled
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          jq -r 'to_entries[] | "\(.key): \(.value.result)"' <<< "${RESULTS}"
+          if jq -e 'any(.[]; .result == "failure" or .result == "cancelled")' <<< "${RESULTS}" > /dev/null; then
+            printf '::error::%s\n' 'A CI job failed or was cancelled; open it above. release-check is skipped on a push to main.'
+            exit 1
+          fi

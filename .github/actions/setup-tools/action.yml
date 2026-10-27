@@ -1,0 +1,42 @@
+# Installs the pinned toolchain CI jobs share: Deno always; just unless a job turns it off; OpenSpec
+# and Zensical when a job asks for them. Versions are pinned here and only here for CI; the dev
+# container installs the same tools through its features (.agents/knowledge/github/checks.md).
+name: Set up repository tools
+description: Install Deno, just unless turned off, and on request the OpenSpec CLI and Zensical.
+inputs:
+  just:
+    description: Install just.
+    default: "true"
+  openspec:
+    description: Install the OpenSpec CLI.
+    default: "false"
+  zensical:
+    description: Install Zensical.
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+      with:
+        deno-version: v2.9.8
+    - name: Install just
+      if: inputs.just == 'true'
+      shell: bash
+      run: pipx install rust-just==1.59.0
+    - name: Install OpenSpec
+      if: inputs.openspec == 'true'
+      shell: bash
+      # Installed with Deno so the pinned version is explicit; edge.openspec.dev is its telemetry host, which the
+      # recipes turn off with OPENSPEC_TELEMETRY=0, allowed so Deno never stops at a permission prompt.
+      run: >-
+        deno install --global --force
+        --allow-read --allow-write --allow-env --allow-sys=cpus,homedir,uid --allow-net=edge.openspec.dev
+        npm:@fission-ai/openspec@1.15.0
+    - name: Put the Deno binaries on PATH
+      if: inputs.openspec == 'true'
+      shell: bash
+      run: printf '%s\n' "${HOME}/.deno/bin" >> "${GITHUB_PATH}"
+    - name: Install Zensical
+      if: inputs.zensical == 'true'
+      shell: bash
+      run: pipx install zensical==0.0.72
